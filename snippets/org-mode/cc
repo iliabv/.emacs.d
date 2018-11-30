@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name : #+srcname:..#+begin_src...#+end_src
+# key: cc
+# --
+#+BEGIN_SRC ipython :session :exports both :async t :results raw
+  $0
+#+END_SRC

@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: tme
+# key: tme
+# --
+<TMPL_MARKER END>$0

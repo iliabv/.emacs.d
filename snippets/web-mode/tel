@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: tel
+# key: tel
+# --
+<TMPL_ELSE>$0

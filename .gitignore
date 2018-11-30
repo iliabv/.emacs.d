@@ -1,0 +1,17 @@
+auto-save-list/
+elpa/
+eshell/
+games/
+semanticdb/
+server/
+url/
+backups/
+
+recentf
+projectile-bookmarks.*
+.custom.el
+.secret.el
+.emacs.desktop*
+.multiple-cursors.el
+.projectile-cache
+.vimish-fold/

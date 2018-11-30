@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: tfor
+# key: tfor
+# --
+<TMPL_FOR $1 IN=$2>$0</TMPL_FOR>

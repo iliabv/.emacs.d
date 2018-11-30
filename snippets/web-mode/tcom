@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: tcom
+# key: tcom
+# --
+<TMPL_COMMENT>$0</TMPL_COMMENT>

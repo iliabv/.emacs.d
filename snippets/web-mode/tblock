@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: tbl
+# key: tbl
+# --
+<TMPL_BLOCK $1 LOCAL_SCOPE>$0</TMPL_BLOCK>

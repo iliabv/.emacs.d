@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: tset
+# key: tset
+# --
+<TMPL_SETVAR $1>$0</TMPL_SETVAR>

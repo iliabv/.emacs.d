@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: tun
+# key: tun
+# --
+<TMPL_UNLESS $1>$0</TMPL_UNLESS>

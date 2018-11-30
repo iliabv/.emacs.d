@@ -1,0 +1,7 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: prr
+# key: prr
+# --
+print STDERR "\n--------- \\$1 ------------\n";
+print STDERR Data::Dumper::Dumper($1);$0
+print STDERR "\n--------- ^^^ ------------\n";

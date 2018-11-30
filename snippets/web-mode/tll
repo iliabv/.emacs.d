@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: tll
+# key: tll
+# --
+<TMPL_$1>$0</TMPL_$1>

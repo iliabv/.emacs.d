@@ -107,9 +107,15 @@
 
 (use-package evil
   :init
-  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-u-scroll t
+        evil-want-visual-char-semi-exclusive t
+        evil-symbol-word-search t)
   :config
   (evil-mode 1))
+
+(use-package evil-magit)
+
+(use-package expand-region)
 
 (use-package anzu
   :config
@@ -379,6 +385,10 @@
    "wc"  '(delete-window :which-key "delete window"))
 
   (general-define-key
+   :keymaps 'helm-map
+   "C-v" '(clipboard-yank :which-key "paste"))
+
+  (general-define-key
    :keymaps 'helm-ag-map
    "C-t" '(p-insert-g-arg :which-key "insert rg argument"))
 
@@ -402,6 +412,11 @@
    "s"   'neotree-enter-horizontal-split
    "q"   'neotree-hide
    "R"   'neotree-refresh)
+
+  (general-define-key
+   :keymaps 'evil-visual-state-map
+   "v" '(er/expand-region :which-key "expand region")
+   "V" '(er/contract-region :which-key "contract region"))
 
   (general-define-key
    :keymaps 'company-active-map

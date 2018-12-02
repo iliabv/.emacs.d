@@ -111,6 +111,7 @@
   :init
   (setq evil-want-C-u-scroll t
         evil-want-visual-char-semi-exclusive t
+        evil-respect-visual-line-mode t
         evil-symbol-word-search t)
   :config
   (evil-mode 1))
@@ -378,6 +379,7 @@
    "pb"  '(helm-projectile-switch-to-buffer :which-key "switch buffer")
 
    "tn"  '(neotree-toggle :which-key "toggle neotree")
+   "tl"  '(toggle-truncate-lines :which-key "toggle line wrapping")
 
    "qz"  '(delete-frame :which-key "delete frame")
    "qq"  '(kill-emacs :which-key "quit")
@@ -430,7 +432,12 @@
 
   (general-define-key
    :keymaps 'company-active-map
-   "C-i" '(company-quickhelp-manual-begin :which-key "show docs")))
+   "C-i" '(company-quickhelp-manual-begin :which-key "show docs"))
+
+  (general-define-key
+   :keymaps 'company-search-map
+   "C-n" '(company-search-repeat-forward :which-key "next")
+   "C-p" '(company-search-repeat-backward :which-key "previous")))
 
 (setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)

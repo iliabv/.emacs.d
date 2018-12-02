@@ -6,6 +6,7 @@ semanticdb/
 server/
 url/
 backups/
+workspace/
 
 recentf
 projectile-bookmarks.*

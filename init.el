@@ -54,6 +54,8 @@
  tab-width 4
  uniquify-buffer-name-style 'forward
  window-combination-resize t
+ enable-dir-local-variables nil
+ enable-local-variables :safe
  x-stretch-cursor t)
 
 ;; (setq-default left-margin-width 1 right-margin-width 1)
@@ -179,7 +181,9 @@
   (setq bpr-colorize-output t)
   (setq bpr-on-start 'p-bpr-set-comint-filter))
 
-(use-package magit)
+(use-package magit
+  :init
+  (setq magit-refresh-status-buffer nil))
 
 (use-package git-gutter
   :commands git-gutter-mode
@@ -318,6 +322,11 @@
 
 (use-package go-mode
   :mode "\\.go\\'")
+
+(use-package lsp-java
+  :config
+  (setq lsp-inhibit-message t)
+  (add-hook 'java-mode-hook #'lsp-java-enable))
 
 (use-package which-key
   :init

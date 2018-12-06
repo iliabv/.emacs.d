@@ -9,7 +9,7 @@
                          ("gnu"   . "http://elpa.gnu.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")))
 
-(unless package--initialized (package-initialize t))
+(unless package--initialized (package-initialize))
 
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -42,6 +42,8 @@
  indent-tabs-mode nil
  inhibit-startup-screen t
  initial-scratch-message ""
+ initial-buffer-choice nil
+ initial-major-mode 'fundamental-mode
  mouse-yank-at-point t
  recenter-positions '(5 top bottom)
  scroll-conservatively most-positive-fixnum
@@ -57,10 +59,6 @@
  enable-dir-local-variables nil
  enable-local-variables :safe
  x-stretch-cursor t)
-
-;; (setq-default left-margin-width 1 right-margin-width 1)
-;; (fringe-mode 0)
-;; (global-subword-mode 1)
 
 (global-auto-revert-mode 1)
 (show-paren-mode 1)
@@ -112,6 +110,7 @@
   (setq evil-want-C-u-scroll t
         evil-want-visual-char-semi-exclusive t
         evil-respect-visual-line-mode t
+        evil-search-module 'evil-search
         evil-symbol-word-search t)
   :config
   (evil-mode 1))
@@ -128,7 +127,7 @@
 
 (use-package helm
   :init
-  (setq-default
+  (setq
    helm-default-display-buffer-functions '(display-buffer-in-side-window)
    helm-always-two-windows nil
    helm-M-x-fuzzy-match t
@@ -165,7 +164,8 @@
   (helm-projectile-on))
 
 (use-package flycheck
-  :init (global-flycheck-mode))
+  :config
+  (global-flycheck-mode))
 
 (use-package neotree
   :init
@@ -187,9 +187,7 @@
   (setq magit-refresh-status-buffer nil))
 
 (use-package git-gutter
-  :commands git-gutter-mode
-  :init
-  (add-hook 'prog-mode-hook #'git-gutter-mode))
+  :hook (prog-mode . git-gutter-mode))
 
 (use-package shackle
   :config
@@ -200,16 +198,16 @@
   (shackle-mode))
 
 (use-package emmet-mode
-  :hook (css-mode html-mode rjsx-mode)
+  :hook (css-mode html-mode rjsx-mode web-mode)
   :config
-  (setq-default
+  (setq
    emmet-insert-flash-time .1
    emmet-move-cursor-between-quote t))
 
 (use-package yasnippet
+  :hook (prog-mode . yas-minor-mode)
   :config
-  (add-hook 'prog-mode-hook 'yas-minor-mode)
-  (setq-default yas-snippet-dirs `(,(expand-file-name "snippets/" user-emacs-directory)))
+  (setq yas-snippet-dirs `(,(expand-file-name "snippets/" user-emacs-directory)))
   (yas-reload-all))
 
 (use-package editorconfig
@@ -217,16 +215,13 @@
   (editorconfig-mode))
 
 (use-package rainbow-delimiters
-  :config
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package electric
-  :config
-  (add-hook 'prog-mode-hook 'electric-indent-mode))
+  :hook (prog-mode . electric-indent-mode))
 
 (use-package elec-pair
-  :config
-  (add-hook 'prog-mode-hook 'electric-pair-mode))
+  :hook (prog-mode . electric-pair-mode))
 
 (use-package files
   :ensure nil
@@ -270,32 +265,9 @@
   (push #'company-lsp company-backends))
 
 (use-package js2-mode
-  :demand t
-  :mode "\\.js\\'")
-
-(use-package typescript-mode
-  :demand t
-  :mode "\\.ts\\'")
-
-;; (use-package tern :ensure t)
-
-(use-package rust-mode
-  :demand t
-  :mode "\\.rs\\'")
-
-(use-package lsp-rust
-  :init
-  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls"))
-  (add-hook 'rust-mode-hook #'lsp-rust-enable))
-
-(use-package lsp-javascript-typescript
-  :init
-  (add-to-list 'js-mode-hook #'lsp-javascript-typescript-enable)
-  (add-to-list 'typescript-mode-hook #'lsp-javascript-typescript-enable))
-
-(use-package js2-mode
+  :mode "\\.js\\'"
   :config
-  (setq-default
+  (setq
    js2-idle-timer-delay 0
    js2-strict-trailing-comma-warning nil
    js2-strict-missing-semi-warning nil
@@ -305,9 +277,22 @@
 (use-package rjsx-mode
   :mode "\\.jsx\\'")
 
+(use-package typescript-mode
+  :mode "\\.ts\\'")
+
+(use-package lsp-javascript-typescript
+  :hook ((js-mode typescript-mode) . lsp-javascript-typescript-enable))
+
+(use-package rust-mode
+  :mode "\\.rs\\'")
+
+(use-package lsp-rust
+  :hook (rust-mode . lsp-rust-enable)
+  :init
+  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls")))
+
 (use-package csv-mode
-  :config
-  (setq-default csv-align-padding 2))
+  :mode "\\.csv\\'")
 
 (use-package dockerfile-mode
   :mode "Dockerfile\\'")
@@ -316,19 +301,16 @@
   :mode "\\.ya?ml\\'")
 
 (use-package web-mode
-  :mode (("\\.erb\\'" . web-mode)
-         ("\\.mustache\\'" . web-mode)
-         ("\\.vue\\'" . web-mode)
-         ("\\.html?\\'" . web-mode)
-         ("\\.php\\'" . web-mode)))
+  :mode ("\\.erb\\'" "\\.mustache\\'" "\\.vue\\'" "\\.html?\\'" "\\.php\\'"))
 
 (use-package go-mode
   :mode "\\.go\\'")
 
 (use-package lsp-java
-  :config
-  (setq lsp-inhibit-message t)
-  (add-hook 'java-mode-hook #'lsp-java-enable))
+  :hook (java-mode . lsp-java-enable)
+  :init
+  (setq lsp-java-save-action-organize-imports nil)
+  (setq lsp-inhibit-message t))
 
 (use-package which-key
   :init
@@ -386,7 +368,7 @@
 
    "hh"  '(helm-apropos :which-key "apropos")
    "jk"  '(helm-show-kill-ring :which-key "show kill ring")
-   "jr"  '(helm-resume :which-key "helm-resume")
+   "jh"  '(helm-resume :which-key "helm-resume")
 
    "wl"  '(windmove-right :which-key "move right")
    "wh"  '(windmove-left :which-key "move left")
@@ -395,6 +377,10 @@
    "wv"  '(split-window-right :which-key "split right")
    "ws"  '(split-window-below :which-key "split bottom")
    "wc"  '(delete-window :which-key "delete window"))
+
+  (general-define-key
+   :keymaps 'evil-normal-state-map
+   "<escape>" '(p-quit :which-key "escape"))
 
   (general-define-key
    :keymaps 'helm-map
@@ -439,7 +425,7 @@
    "C-n" '(company-search-repeat-forward :which-key "next")
    "C-p" '(company-search-repeat-backward :which-key "previous")))
 
-(setq-default custom-file (expand-file-name ".custom.el" user-emacs-directory))
+(setq custom-file (expand-file-name ".custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file))
 

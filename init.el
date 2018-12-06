@@ -343,7 +343,7 @@
 
    "bk"  '(kill-this-buffer :which-key "kill this buffer")
 
-   "cd"  '(lsp-goto-type-definition :which-key "go to definition")
+   "cd"  '(xref-find-definitions :which-key "go to definition")
    "ci"  '(lsp-goto-implementation :which-key "go to implementation")
    "ce"  '(flycheck-list-errors :which-key "list errors")
 

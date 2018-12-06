@@ -126,6 +126,8 @@
   (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
   (global-set-key [remap query-replace] 'anzu-query-replace))
 
+(use-package evil-anzu)
+
 (use-package helm
   :init
   (setq

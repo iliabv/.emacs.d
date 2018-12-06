@@ -44,6 +44,7 @@
  initial-scratch-message ""
  initial-buffer-choice nil
  initial-major-mode 'fundamental-mode
+ create-lockfiles nil
  mouse-yank-at-point t
  recenter-positions '(5 top bottom)
  scroll-conservatively most-positive-fixnum

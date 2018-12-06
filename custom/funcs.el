@@ -250,3 +250,20 @@
 
 (defun p-format-string-for-process (string)
   (concat string "\n"))
+
+(defun p-quit ()
+  (interactive)
+  (evil-ex-nohighlight)
+  (cond ((eq last-command 'mode-exited) nil)
+	((region-active-p)
+	 (deactivate-mark))
+	((> (minibuffer-depth) 0)
+	 (abort-recursive-edit))
+	(current-prefix-arg
+	 nil)
+	((> (recursion-depth) 0)
+	 (exit-recursive-edit))
+	(buffer-quit-function
+	 (funcall buffer-quit-function))
+	((string-match "^\\*" (buffer-name (current-buffer)))
+	 (delete-window))))

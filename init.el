@@ -377,6 +377,7 @@
    "jr"  '(p-boo-sync-restart :which-key "boo sync and restart")
    "jb"  '(p-boo-set-role :which-key "boo set role")
    "jl"  '(bpr-open-last-buffer :which-key "boo set role")
+   "ji"  '(comint-clear-buffer :which-key "clear comint buffer")
 
    "wl"  '(windmove-right :which-key "move right")
    "wh"  '(windmove-left :which-key "move left")

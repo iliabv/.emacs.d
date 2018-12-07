@@ -133,13 +133,12 @@
   (setq
    helm-default-display-buffer-functions '(display-buffer-in-side-window)
    helm-always-two-windows nil
+   helm-file-cache-fuzzy-match nil
+   helm-ff-fuzzy-matching nil
+   helm-projectile-fuzzy-match nil
    helm-M-x-fuzzy-match t
-   helm-mode-fuzzy-match t
    helm-buffers-fuzzy-matching t
    helm-recentf-fuzzy-match t
-   helm-locate-fuzzy-match t
-   helm-semantic-fuzzy-match t
-   helm-imenu-fuzzy-match t
    helm-completion-in-region-fuzzy-match t
    helm-candidate-number-list 80
    helm-split-window-in-side-p t
@@ -157,6 +156,7 @@
 (use-package projectile
   :init
   (setq projectile-require-project-root nil)
+  (setq projectile-enable-caching t)
   :config
   (projectile-mode 1))
 

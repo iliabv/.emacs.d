@@ -133,9 +133,7 @@
   (setq
    helm-default-display-buffer-functions '(display-buffer-in-side-window)
    helm-always-two-windows nil
-   helm-file-cache-fuzzy-match nil
    helm-ff-fuzzy-matching nil
-   helm-projectile-fuzzy-match nil
    helm-M-x-fuzzy-match t
    helm-buffers-fuzzy-matching t
    helm-recentf-fuzzy-match t
@@ -162,7 +160,7 @@
 
 (use-package helm-projectile
   :init
-  (setq helm-projectile-fuzzy-match t)
+  (setq helm-projectile-fuzzy-match nil)
   :config
   (helm-projectile-on))
 

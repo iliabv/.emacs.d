@@ -328,7 +328,7 @@
 (use-package general
   :config
   (general-define-key
-   "<escape>" '(keyboard-escape-quit :which-key "escape")
+   "<escape>" '(p-quit :which-key "escape")
    "<f4>" '(p-term-in-project :which-key "terminal in project"))
 
   (general-define-key
@@ -359,7 +359,7 @@
    "gl"  '(magit-log-buffer-file :which-key "log current file")
    "gm"  '(p-shell-show-mine-commits :which-key "show mine commits")
 
-   "ot"  '(p-term-in-project :which-key "open terminal")
+   "ot"  '(p-term :which-key "open terminal")
    "on"  '(neotree-toggle :which-key "toggle neotree")
 
    "pf"  '(helm-projectile-find-file :which-key "find files in project")
@@ -375,6 +375,10 @@
    "hh"  '(helm-apropos :which-key "apropos")
    "jk"  '(helm-show-kill-ring :which-key "show kill ring")
    "jh"  '(helm-resume :which-key "helm-resume")
+   "js"  '(p-boo-sync :which-key "boo sync")
+   "jr"  '(p-boo-sync-restart :which-key "boo sync and restart")
+   "jb"  '(p-boo-set-role :which-key "boo set role")
+   "jl"  '(bpr-open-last-buffer :which-key "boo set role")
 
    "wl"  '(windmove-right :which-key "move right")
    "wh"  '(windmove-left :which-key "move left")

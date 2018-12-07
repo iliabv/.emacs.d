@@ -307,7 +307,7 @@
   :mode "\\.ya?ml\\'")
 
 (use-package web-mode
-  :mode ("\\.erb\\'" "\\.mustache\\'" "\\.vue\\'" "\\.html?\\'" "\\.php\\'"))
+  :mode ("\\.erb\\'" "\\.mustache\\'" "\\.vue\\'" "\\.html?\\'" "\\.php\\'" "\\.inc\\'" "\\.tmpl\\'"))
 
 (use-package go-mode
   :mode "\\.go\\'")

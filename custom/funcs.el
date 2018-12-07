@@ -62,22 +62,22 @@
 (defun p-boo-restart ()
   "Runs 'boo restart ROLE'"
   (interactive)
-  (p-boo-run "restart" p/boo-role))
+  (p-boo-run "restart" p-boo-role))
 
 (defun p-boo-sync ()
   "Runs 'boo sync ROLE'"
   (interactive)
-  (p-boo-run "sync" p/boo-role))
+  (p-boo-run "sync" p-boo-role))
 
 (defun p-boo-sync-restart ()
   "Runs 'boo sync ROLE && boo restart ROLE'"
   (interactive)
-  (bpr-spawn (concat "boo sync " p-boo-role " && boo restart " p/boo-role)))
+  (bpr-spawn (concat "boo sync " p-boo-role " && boo restart " p-boo-role)))
 
 (defun p-boo-concat ()
   "Runs 'boo concat ROLE'"
   (interactive)
-  (bpr-spawn (concat "boo sync " p-boo-role " && boo concat " p/boo-role)))
+  (bpr-spawn (concat "boo sync " p-boo-role " && boo concat " p-boo-role)))
 
 (defun p-bpr-package-tests ()
   "Tests emacs-bpr package"
@@ -139,7 +139,7 @@
 (defun p-copy-file-name ()
   "Copies file name to clipboard"
   (interactive)
-  (p-copy-to-clipboard (p/get-file-name)))
+  (p-copy-to-clipboard (p-get-file-name)))
 
 (defun p-copy-file-name-and-line-number ()
   "Copies file name with current line number to clipboard"

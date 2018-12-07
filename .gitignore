@@ -10,6 +10,7 @@ workspace/
 
 recentf
 projectile-bookmarks.*
+projectile.cache
 .custom.el
 .secret.el
 .emacs.desktop*

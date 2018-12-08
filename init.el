@@ -91,7 +91,11 @@
   (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer))
 
 (use-package doom-modeline
-  :hook (after-init . doom-modeline-init))
+  :hook (after-init . doom-modeline-init)
+  :init
+  (setq doom-modeline-major-mode-icon nil)
+  (setq doom-modeline-persp-name nil)
+  (setq doom-modeline-buffer-file-name-style 'file-name))
 
 (use-package dashboard
   :config

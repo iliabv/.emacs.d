@@ -90,14 +90,8 @@
   :config
   (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer))
 
-(use-package spaceline
-  :init
-  (setq powerline-default-separator nil)
-  :config
-  (spaceline-emacs-theme)
-  (spaceline-toggle-minor-modes-off)
-  (spaceline-toggle-buffer-size-off)
-  (spaceline-toggle-evil-state-on))
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-init))
 
 (use-package dashboard
   :config

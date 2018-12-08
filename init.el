@@ -131,7 +131,7 @@
   (setq
    helm-default-display-buffer-functions '(display-buffer-in-side-window)
    helm-always-two-windows nil
-   helm-ff-fuzzy-matching nil
+   helm-ff-fuzzy-matching t
    helm-M-x-fuzzy-match t
    helm-buffers-fuzzy-matching t
    helm-recentf-fuzzy-match t

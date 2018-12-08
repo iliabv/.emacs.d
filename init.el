@@ -191,7 +191,8 @@
 (use-package shackle
   :config
   (setq shackle-rules
-        '(("\\*helm.*?\\*" :regexp t :align t :size 0.5)
+        '((neotree-mode :align left)
+          ("\\*helm.*?\\*" :regexp t :align t :size 0.5)
           ("\\*term:.*?\\*" :regexp t :align t :select t :size 0.6)
           ("\\*.*\\*" :regexp t :align t :select t :size 0.5)))
   (shackle-mode))

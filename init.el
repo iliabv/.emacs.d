@@ -401,6 +401,8 @@
 
   (general-define-key
    :keymaps 'helm-map
+   "C-j" '(helm-next-line :which-key "next line")
+   "C-k" '(helm-previous-line :which-key "previous line")
    "C-v" '(clipboard-yank :which-key "paste"))
 
   (general-define-key
@@ -444,6 +446,8 @@
 
   (general-define-key
    :keymaps 'company-search-map
+   "C-j" '(company-search-repeat-forward :which-key "next")
+   "C-k" '(company-search-repeat-backward :which-key "previous")
    "C-n" '(company-search-repeat-forward :which-key "next")
    "C-p" '(company-search-repeat-backward :which-key "previous")))
 

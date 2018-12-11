@@ -239,9 +239,10 @@
   :init
   (add-hook 'prog-major-mode #'lsp-prog-major-mode-enable))
 
-;;(use-package lsp-ui
+;; (use-package lsp-ui
+;;  :hook (lsp-mode . lsp-ui-mode)
 ;;  :init
-;;  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+;;  (setq lsp-ui-sideline-enable nil))
 
 (use-package company
   :init

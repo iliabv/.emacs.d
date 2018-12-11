@@ -373,6 +373,7 @@
    "qq"  '(kill-emacs :which-key "quit")
 
    "hh"  '(helm-apropos :which-key "apropos")
+   "jt"  '(p-term :which-key "open terminal")
    "jk"  '(helm-show-kill-ring :which-key "show kill ring")
    "jh"  '(helm-resume :which-key "helm-resume")
    "js"  '(p-boo-sync :which-key "boo sync")
@@ -430,6 +431,11 @@
    :keymaps 'evil-visual-state-map
    "v" '(er/expand-region :which-key "expand region")
    "V" '(er/contract-region :which-key "contract region"))
+
+  (general-define-key
+    :keymaps 'comint-mode-map
+    "<up>" '(comint-previous-input :which-key "history prev")
+    "<down>" '(comint-next-input :which-key "history next"))
 
   (general-define-key
    :keymaps 'company-active-map

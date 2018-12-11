@@ -48,7 +48,6 @@
  mouse-yank-at-point t
  recenter-positions '(5 top bottom)
  scroll-conservatively most-positive-fixnum
- scroll-margin 10
  select-enable-clipboard t
  sentence-end-double-space nil
  show-trailing-whitespace nil
@@ -70,7 +69,9 @@
 (put 'upcase-region 'disabled nil)
 (set-default-coding-systems 'utf-8)
 
-(add-hook 'prog-mode-hook (lambda () (setq show-trailing-whitespace t)))
+(add-hook 'prog-mode-hook 'p-show-trailing-whitespace)
+(add-hook 'prog-mode-hook 'p-enable-scroll-margin)
+(add-hook 'comint-mode-hook 'p-disable-scroll-margin)
 
 (use-package exec-path-from-shell
   :config

@@ -267,3 +267,15 @@
 	 (funcall buffer-quit-function))
 	((string-match "^\\*" (buffer-name (current-buffer)))
 	 (delete-window))))
+
+(defun p-flash-modeline ()
+  "Set modeline foreground to red for 300 ms."
+  (interactive)
+  (let ((orig-fg (face-foreground 'mode-line)))
+    (set-face-foreground 'mode-line "#F2804F")
+    (run-with-idle-timer 0.3 nil
+      (lambda (fg) (set-face-foreground 'mode-line fg))
+      orig-fg)))
+
+(provide 'funcs)
+;;; funcs.el ends here

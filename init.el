@@ -69,6 +69,8 @@
 (put 'upcase-region 'disabled nil)
 (set-default-coding-systems 'utf-8)
 
+(setq ring-bell-function 'p-flash-modeline)
+
 (add-hook 'prog-mode-hook 'p-show-trailing-whitespace)
 (add-hook 'prog-mode-hook 'p-enable-scroll-margin)
 (add-hook 'comint-mode-hook 'p-disable-scroll-margin)

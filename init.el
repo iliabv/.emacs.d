@@ -58,6 +58,7 @@
  window-combination-resize t
  enable-dir-local-variables nil
  enable-local-variables :safe
+ truncate-lines t
  x-stretch-cursor t)
 
 (global-auto-revert-mode 1)

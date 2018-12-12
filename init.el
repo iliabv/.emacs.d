@@ -348,6 +348,7 @@
 
    "cd"  '(xref-find-definitions :which-key "go to definition")
    "ci"  '(lsp-goto-implementation :which-key "go to implementation")
+   "cr"  '(lsp-rename :which-key "rename")
    "ce"  '(flycheck-list-errors :which-key "list errors")
 
    "ff"  '(helm-projectile-find-file :which-key "find files")
@@ -455,5 +456,7 @@
   (load custom-file))
 
 (provide 'init)
+
+;; (byte-recompile-directory package-user-dir nil 'force)
 
 ;;; init.el ends here

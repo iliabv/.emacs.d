@@ -9,6 +9,7 @@ backups/
 workspace/
 .cask/
 
+tramp
 recentf
 projectile-bookmarks.*
 projectile.cache

@@ -236,8 +236,7 @@
    version-control t))
 
 (use-package lsp-mode
-  :init
-  (add-hook 'prog-major-mode #'lsp-prog-major-mode-enable))
+  :defer t)
 
 ;; (use-package lsp-ui
 ;;  :hook (lsp-mode . lsp-ui-mode)
@@ -263,9 +262,9 @@
   (company-quickhelp-mode))
 
 (use-package company-lsp
-  :commands (company-lsp)
   :init
   (setq company-lsp-async t)
+  :config
   (push #'company-lsp company-backends))
 
 (use-package js2-mode

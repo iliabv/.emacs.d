@@ -341,6 +341,9 @@
   (setq lsp-java-save-action-organize-imports nil)
   (setq lsp-inhibit-message t))
 
+(use-package evil-cleverparens
+  :hook (emacs-lisp-mode . evil-cleverparens-mode))
+
 (use-package which-key
   :init
   (setq which-key-separator " ")

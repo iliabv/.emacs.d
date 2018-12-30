@@ -198,37 +198,6 @@
   (interactive)
   (setq show-trailing-whitespace (not show-trailing-whitespace)))
 
-(defun p-lisp-insert-sexp-after ()
-  "Insert sexp after the current one."
-  (interactive)
-  (let ((sp-navigate-consider-symbols nil))
-    (if (char-equal (char-after) ?\() (forward-char))
-    (sp-up-sexp)
-    (evil-insert-state)
-    (sp-newline)
-    (sp-insert-pair "(")))
-
-(defun p-lisp-insert-sexp-before ()
-  "Insert sexp before the current one."
-  (interactive)
-  (let ((sp-navigate-consider-symbols nil))
-    (if (char-equal (char-after) ?\() (forward-char))
-    (sp-backward-sexp)
-    (evil-insert-state)
-    (sp-newline)
-    (evil-previous-visual-line)
-    (evil-end-of-line)
-    (insert " ")
-    (sp-insert-pair "(")
-    (indent-for-tab-command)))
-
-(defun p-create-newline-and-enter-sexp (&rest _ignored)
-  "Open a new brace or bracket expression, with relevant newlines and indent. "
-  (newline)
-  (indent-according-to-mode)
-  (forward-line -1)
-  (indent-according-to-mode))
-
 (defun p-send-to-first-visible-shell ()
   (interactive)
   (if-let* ((comint-window (get-window-with-predicate 'p-is-comint-window)))

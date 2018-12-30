@@ -189,8 +189,11 @@
   :init
   (setq magit-refresh-status-buffer nil))
 
-(use-package git-gutter
-  :hook (prog-mode . git-gutter-mode))
+(use-package diff-hl
+  :hook (prog-mode . turn-on-diff-hl-mode)
+  :init
+  (setq diff-hl-fringe-bmp-function 'diff-hl-fringe-bmp-from-type)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 (use-package shackle
   :config

@@ -166,6 +166,11 @@
   :config
   (helm-projectile-on))
 
+(use-package flyspell
+  :init
+  (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+  (add-hook 'text-mode-hook 'turn-on-flyspell))
+
 (use-package flycheck
   :config
   (global-flycheck-mode))

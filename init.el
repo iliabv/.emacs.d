@@ -98,8 +98,12 @@
   :hook (after-init . doom-modeline-init)
   :init
   (setq doom-modeline-major-mode-icon nil)
-  (setq doom-modeline-persp-name nil)
-  (setq doom-modeline-buffer-file-name-style 'file-name))
+  (setq doom-modeline-buffer-file-name-style 'file-name)
+  :config
+  (doom-modeline-def-modeline 'custom
+    '(bar window-number matches " " buffer-info remote-host buffer-position " " selection-info)
+    '(global lsp minor-modes major-mode process vcs flycheck))
+  (doom-modeline-set-modeline 'custom t))
 
 (use-package dashboard
   :config

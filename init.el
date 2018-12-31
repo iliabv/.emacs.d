@@ -300,6 +300,8 @@
    js2-mode-show-parse-errors nil
    js2-mode-show-strict-warnings nil))
 
+(use-package skewer-mode)
+
 (use-package json-mode
   :mode "\\.json\\'")
 

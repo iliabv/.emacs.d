@@ -20,9 +20,9 @@
 
 (load "~/.emacs.d/custom/funcs.el")
 
-(add-to-list 'default-frame-alist '(font . "Hack-12"))
-(add-to-list 'default-frame-alist '(height . 40))
-(add-to-list 'default-frame-alist '(width . 80))
+(set-face-attribute 'default nil :family "Iosevka Slab" :height 123)
+;; (set-face-attribute 'default nil :family "Iosevka" :height 123)
+;; (set-face-attribute 'default nil :family "Hack" :height 120)
 
 (when window-system
   (scroll-bar-mode 0)

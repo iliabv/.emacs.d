@@ -334,6 +334,14 @@
   :init
   (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls")))
 
+(use-package pipenv
+  :hook (python-mode . pipenv-mode)
+  :init
+  (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended))
+
+(use-package lsp-python
+  :hook (python-mode . lsp-python-enable))
+
 (use-package csv-mode
   :mode "\\.csv\\'")
 

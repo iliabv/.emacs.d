@@ -180,6 +180,8 @@
 
 (use-package neotree
   :init
+  (setq neo-hidden-regexp-list '("~$" "^#.*#$"))
+  (setq neo-window-fixed-size nil)
   (setq neo-window-width 40)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 

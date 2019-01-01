@@ -206,6 +206,9 @@
   (setq diff-hl-fringe-bmp-function 'diff-hl-fringe-bmp-from-type)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
+(use-package color-identifiers-mode
+  :commands (color-identifiers-mode))
+
 (use-package shackle
   :config
   (setq shackle-rules
@@ -260,6 +263,9 @@
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
 
+(use-package restclient
+  :commands (restclient-mode))
+
 (use-package lsp-mode
   :defer t)
 
@@ -302,7 +308,11 @@
    js2-mode-show-parse-errors nil
    js2-mode-show-strict-warnings nil))
 
-(use-package skewer-mode)
+(use-package skewer-mode
+  :commands (run-skewer))
+
+(use-package web-beautify
+  :commands (web-beautify-js web-beautify-css web-beautify-html))
 
 (use-package json-mode
   :mode "\\.json\\'")

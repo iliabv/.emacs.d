@@ -339,8 +339,17 @@
   :init
   (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended))
 
-(use-package lsp-python
-  :hook (python-mode . lsp-python-enable))
+(use-package anaconda-mode
+  :hook ((python-mode . anaconda-mode)
+         (python-mode . anaconda-eldoc-mode)))
+
+(use-package company-anaconda
+  :after company
+  :config
+  (add-to-list 'company-backends '(company-anaconda :with company-capf)))
+
+;; (use-package lsp-python
+;;   :hook (python-mode . lsp-python-enable))
 
 (use-package csv-mode
   :mode "\\.csv\\'")

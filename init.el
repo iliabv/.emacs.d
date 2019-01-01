@@ -86,8 +86,7 @@
 
 (use-package doom-themes
   :config
-  (load-theme 'doom-solarized-light t)
-  (doom-themes-neotree-config))
+  (load-theme 'doom-solarized-light t))
 
 (use-package solaire-mode
   :hook ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)

@@ -180,6 +180,7 @@
 
 (use-package neotree
   :init
+  (setq neo-window-width 40)
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
 
 (use-package evil-nerd-commenter
@@ -390,6 +391,7 @@
 
    "ot"  '(p-term :which-key "open terminal")
    "on"  '(neotree-toggle :which-key "toggle neotree")
+   "of"  '(neotree-find :which-key "show file in neotree")
 
    "pf"  '(helm-projectile-find-file :which-key "find files in project")
    "pp"  '(helm-projectile-switch-project :which-key "switch project")

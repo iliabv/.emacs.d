@@ -267,12 +267,20 @@
   :commands (restclient-mode))
 
 (use-package lsp-mode
-  :defer t)
+  :hook ((js-mode python-mode java-mode) . lsp))
+
+(use-package company-lsp
+  :commands (company-lsp))
 
 ;; (use-package lsp-ui
-;;  :hook (lsp-mode . lsp-ui-mode)
-;;  :init
-;;  (setq lsp-ui-sideline-enable nil))
+;;   :commands (lsp-ui)
+;;   :init
+;;   (setq lsp-ui-sideline-enable nil))
+
+(use-package lsp-java
+  :after lsp
+  :init
+  (setq lsp-java-save-action-organize-imports nil))
 
 (use-package company
   :init
@@ -291,12 +299,6 @@
   :config
   (setq company-quickhelp-delay nil)
   (company-quickhelp-mode))
-
-(use-package company-lsp
-  :init
-  (setq company-lsp-async t)
-  :config
-  (push #'company-lsp company-backends))
 
 (use-package js2-mode
   :mode "\\.js\\'"
@@ -323,33 +325,13 @@
 (use-package typescript-mode
   :mode "\\.ts\\'")
 
-(use-package lsp-javascript-typescript
-  :hook ((js-mode typescript-mode) . lsp-javascript-typescript-enable))
-
 (use-package rust-mode
   :mode "\\.rs\\'")
-
-(use-package lsp-rust
-  :hook (rust-mode . lsp-rust-enable)
-  :init
-  (setq lsp-rust-rls-command '("rustup" "run" "nightly" "rls")))
 
 (use-package pipenv
   :hook (python-mode . pipenv-mode)
   :init
   (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended))
-
-(use-package anaconda-mode
-  :hook ((python-mode . anaconda-mode)
-         (python-mode . anaconda-eldoc-mode)))
-
-(use-package company-anaconda
-  :after company
-  :config
-  (add-to-list 'company-backends '(company-anaconda :with company-capf)))
-
-;; (use-package lsp-python
-;;   :hook (python-mode . lsp-python-enable))
 
 (use-package csv-mode
   :mode "\\.csv\\'")
@@ -365,12 +347,6 @@
 
 (use-package go-mode
   :mode "\\.go\\'")
-
-(use-package lsp-java
-  :hook (java-mode . lsp-java-enable)
-  :init
-  (setq lsp-java-save-action-organize-imports nil)
-  (setq lsp-inhibit-message t))
 
 (use-package evil-cleverparens
   :hook (emacs-lisp-mode . evil-cleverparens-mode))

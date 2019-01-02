@@ -20,9 +20,9 @@
 
 (load "~/.emacs.d/custom/funcs.el")
 
-(set-face-attribute 'default nil :family "Iosevka Slab" :height 123)
-;; (set-face-attribute 'default nil :family "Iosevka" :height 123)
-;; (set-face-attribute 'default nil :family "Hack" :height 120)
+(if (eq system-type 'darwin)
+  (set-face-attribute 'default nil :family "Iosevka" :height 185)
+  (set-face-attribute 'default nil :family "Iosevka Slab" :height 123))
 
 (when window-system
   (scroll-bar-mode 0)

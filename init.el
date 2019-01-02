@@ -493,6 +493,4 @@
 
 (provide 'init)
 
-;; (byte-recompile-directory package-user-dir nil 'force)
-
 ;;; init.el ends here

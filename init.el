@@ -96,6 +96,7 @@
 (use-package doom-modeline
   :hook (after-init . doom-modeline-init)
   :init
+  (setq doom-modeline-height 35)
   (setq doom-modeline-major-mode-icon nil)
   (setq doom-modeline-buffer-file-name-style 'file-name)
   :config

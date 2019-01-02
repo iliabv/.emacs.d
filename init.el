@@ -416,7 +416,7 @@
    "js"  '(p-boo-sync :which-key "boo sync")
    "jr"  '(p-boo-sync-restart :which-key "boo sync and restart")
    "jb"  '(p-boo-set-role :which-key "boo set role")
-   "jl"  '(bpr-open-last-buffer :which-key "boo set role")
+   "jl"  '(p-bpr-open-last-buffer :which-key "open last BPR buffer")
    "ji"  '(comint-clear-buffer :which-key "clear comint buffer")
 
    "wl"  '(windmove-right :which-key "move right")

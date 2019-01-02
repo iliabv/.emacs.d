@@ -92,6 +92,16 @@
   (let* ((bpr-process-directory "~/"))
     (bpr-spawn "networksetup -setairportpower en0 off; sleep 4; networksetup -setairportpower en0 on")))
 
+(defun p-bpr-open-last-buffer ()
+  "Open last BPR buffer and select it."
+  (interactive)
+  (if (buffer-live-p bpr-last-buffer)
+    (let ((window (split-window-vertically)))
+      (set-window-buffer window bpr-last-buffer)
+      (select-window window)
+      (evil-normal-state))
+    (message "Can't find last used buffer")))
+
 (defun p-flyspell-save-word ()
   "Saves word to flyspell current dictionary"
   (interactive)

@@ -9,6 +9,7 @@ backups/
 workspace/
 anaconda-mode/
 .cask/
+.vimish-fold/
 
 tramp
 recentf
@@ -19,4 +20,4 @@ projectile.cache
 .emacs.desktop*
 .multiple-cursors.el
 .projectile-cache
-.vimish-fold/
+.lsp-session-*

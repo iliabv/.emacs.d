@@ -149,7 +149,8 @@
    helm-move-to-line-cycle-in-source nil
    helm-echo-input-in-header-line t
    helm-autoresize-max-height 0
-   helm-autoresize-min-height 20)
+   helm-autoresize-min-height 20
+   helm-buffer-max-length 50)
   :config
   (helm-mode 1))
 

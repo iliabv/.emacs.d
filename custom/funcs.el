@@ -256,5 +256,21 @@
       (lambda (fg) (set-face-foreground 'mode-line fg))
       orig-fg)))
 
+(defun p-split-window (splitter)
+  "Create new window using SPLITTER function, select it, and open 'next' buffer in it."
+  (let ((win (funcall splitter)))
+    (select-window win)
+    (next-buffer)))
+
+(defun p-split-window-below ()
+  "Create new window below the current one, select it, and open 'next' buffer in it."
+  (interactive)
+  (p-split-window 'split-window-below))
+
+(defun p-split-window-right ()
+  "Create new window to the right from the current one, select it, and open 'next' buffer in it."
+  (interactive)
+  (p-split-window 'split-window-right))
+
 (provide 'funcs)
 ;;; funcs.el ends here

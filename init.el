@@ -428,8 +428,9 @@
    "wH"  '(evil-window-move-far-left :which-key "move window left")
    "wK"  '(evil-window-move-very-top :which-key "move window up")
    "wJ"  '(evil-window-move-very-bottom :which-key "move window bottom")
-   "wv"  '(split-window-right :which-key "split right")
-   "ws"  '(split-window-below :which-key "split bottom")
+   "wv"  '(p-split-window-right :which-key "split right")
+   "ws"  '(p-split-window-below :which-key "split bottom")
+   "wo"  '(delete-other-windows :which-key "delete other windows"))
    "wc"  '(delete-window :which-key "delete window"))
 
   (general-define-key

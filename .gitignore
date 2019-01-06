@@ -9,6 +9,7 @@ backups/
 workspace/
 anaconda-mode/
 .cask/
+.cache/
 .vimish-fold/
 
 tramp

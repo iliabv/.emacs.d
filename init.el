@@ -430,6 +430,9 @@
    "wJ"  '(evil-window-move-very-bottom :which-key "move window bottom")
    "wv"  '(p-split-window-right :which-key "split right")
    "ws"  '(p-split-window-below :which-key "split bottom")
+   "+"  '(p-enlarge-window-right :which-key "enlarge window")
+   "-"  '(p-shrink-window-right :which-key "shrink window")
+   "wb"  '(balance-windows :which-key "balance windows")
    "wo"  '(delete-other-windows :which-key "delete other windows")
    "wc"  '(delete-window :which-key "delete window"))
 

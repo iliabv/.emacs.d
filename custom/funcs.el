@@ -272,5 +272,15 @@
   (interactive)
   (p-split-window 'split-window-right))
 
+(defun p-enlarge-window-right ()
+  "Enlarge current window horizontally."
+  (interactive)
+  (enlarge-window-horizontally 50))
+
+(defun p-shrink-window-right ()
+  "Shrink current window horizontally."
+  (interactive)
+  (shrink-window-horizontally 50))
+
 (provide 'funcs)
 ;;; funcs.el ends here

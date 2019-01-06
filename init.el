@@ -397,14 +397,13 @@
    "gm"  '(p-shell-show-mine-commits :which-key "show mine commits")
 
    "ot"  '(p-term :which-key "open terminal")
-   "on"  '(neotree-toggle :which-key "toggle neotree")
-   "of"  '(neotree-find :which-key "show file in neotree")
 
    "pf"  '(helm-projectile-find-file :which-key "find files in project")
    "pp"  '(helm-projectile-switch-project :which-key "switch project")
    "pb"  '(helm-projectile-switch-to-buffer :which-key "switch buffer")
 
-   "tn"  '(neotree-toggle :which-key "toggle neotree")
+   "tt"  '(neotree-toggle :which-key "toggle neotree")
+   "tf"  '(neotree-find :which-key "show file in neotree")
    "tl"  '(toggle-truncate-lines :which-key "toggle line wrapping")
 
    "qz"  '(delete-frame :which-key "delete frame")

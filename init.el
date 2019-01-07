@@ -353,6 +353,9 @@
 (use-package evil-cleverparens
   :hook (emacs-lisp-mode . evil-cleverparens-mode))
 
+(use-package smartparens
+  :hook (emacs-lisp-mode . smartparens-strict-mode))
+
 (use-package which-key
   :init
   (setq which-key-separator " ")

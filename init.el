@@ -439,8 +439,12 @@
    "wc"  '(delete-window :which-key "delete window"))
 
   (general-define-key
-   :keymaps 'evil-normal-state-map
-   "<escape>" '(p-quit :which-key "escape"))
+    :states 'normal
+    "<escape>" '(p-quit :which-key "escape"))
+
+  (general-define-key
+    :states 'visual
+    "<backspace>" '(delete-region :which-key "delete region (skip kill ring)"))
 
   (general-define-key
    :keymaps 'helm-map

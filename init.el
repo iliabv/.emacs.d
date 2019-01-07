@@ -393,6 +393,7 @@
    "ff"  '(helm-projectile-find-file :which-key "find files")
    "fp"  '(helm-projectile-find-file :which-key "find files in project")
    "fy"  '(p-copy-file-name-and-line-number :which-key "copy file name and line number")
+   "fs"  '(p-flyspell-save-word :which-key "flyspell save word")
 
    "gg"  '(magit :which-key "magit")
    "gb"  '(magit-blame :which-key "git blame")

@@ -445,7 +445,9 @@
 
   (general-define-key
     :states 'visual
-    "<backspace>" '(delete-region :which-key "delete region (skip kill ring)"))
+    "<backspace>" '(delete-region :which-key "delete region (skip kill ring)")
+    "v" '(er/expand-region :which-key "expand region")
+    "V" '(er/contract-region :which-key "contract region"))
 
   (general-define-key
    :keymaps 'helm-map
@@ -477,11 +479,6 @@
    "s"   'neotree-enter-horizontal-split
    "q"   'neotree-hide
    "R"   'neotree-refresh)
-
-  (general-define-key
-   :keymaps 'evil-visual-state-map
-   "v" '(er/expand-region :which-key "expand region")
-   "V" '(er/contract-region :which-key "contract region"))
 
   (general-define-key
     :keymaps 'comint-mode-map

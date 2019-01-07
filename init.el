@@ -305,12 +305,12 @@
 (use-package js2-mode
   :mode "\\.js\\'"
   :config
-  (setq
-   js2-idle-timer-delay 0
-   js2-strict-trailing-comma-warning nil
-   js2-strict-missing-semi-warning nil
-   js2-mode-show-parse-errors nil
-   js2-mode-show-strict-warnings nil))
+  (setq js2-idle-timer-delay 0)
+  (setq js2-strict-trailing-comma-warning nil)
+  (setq js2-strict-missing-semi-warning nil)
+  (setq js2-mode-show-parse-errors nil)
+  (setq js2-mode-show-strict-warnings nil)
+  (add-hook 'js2-mode-hook 'p-flycheck-use-eslint-from-node-modules))
 
 (use-package skewer-mode
   :commands (run-skewer))
@@ -352,9 +352,6 @@
 
 (use-package evil-cleverparens
   :hook (emacs-lisp-mode . evil-cleverparens-mode))
-
-(use-package smartparens
-  :hook (emacs-lisp-mode . smartparens-strict-mode))
 
 (use-package which-key
   :init

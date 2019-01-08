@@ -1,3 +1,31 @@
+(defun p-eshell-prompt-function ()
+  (concat
+   (propertize (eshell/dirs) 'face `(:foreground "cornflower blue"))
+   (propertize "$ " 'face `(:foreground "green"))))
+
+(defun p-enable-evil-normal-state ()
+  (unless (member major-mode evil-normal-state-modes)
+    (message "Dynamically set evil state to 'normal for %s" (buffer-name))
+    (evil-set-initial-state major-mode 'normal)))
+
+(defun p-enable-evil-emacs-state ()
+  (unless (member major-mode evil-emacs-state-modes)
+    (message "Dynamically set evil state to 'emacs for %s" (buffer-name))
+    (evil-set-initial-state major-mode 'emacs)))
+
+(defun p-enable-scroll-margin ()
+  (make-variable-buffer-local 'scroll-margin)
+  (setq scroll-margin 10))
+
+(defun p-disable-scroll-margin ()
+  (make-variable-buffer-local 'scroll-margin)
+  (setq scroll-margin 0))
+
+(defun p-delete-tern-process ()
+  "Deletes tern process (after that, tern restarts automatically)"
+  (interactive)
+  (delete-process "Tern"))
+
 (defun p-term (name)
   "Open term buffer with given name"
   (interactive "sName: ")
@@ -164,6 +192,17 @@
   "Sets 'comint-output-filter to the process"
   (set-process-filter process 'comint-output-filter))
 
+(defun p-evil-search-clear-highlight ()
+  "Clear evil-search or evil-ex-search persistent highlights."
+  (interactive)
+  ;; (evil-search-highlight-persist-remove-all) ; `C-s' highlights
+  (evil-ex-nohighlight))                     ; `/' highlights
+
+(defun p-show-trailing-whitespace ()
+  "Sets show-trailing-whitespace to t"
+  (interactive)
+  (setq show-trailing-whitespace t))
+
 (defun p-toggle-show-trailing-whitespace ()
   "Toggles show-trailing-whitespace between t and nil"
   (interactive)
@@ -251,3 +290,4 @@
       (setq-local flycheck-javascript-eslint-executable eslint))))
 
 (provide 'funcs)
+;;; funcs.el ends here

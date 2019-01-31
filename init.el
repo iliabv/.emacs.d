@@ -276,15 +276,21 @@
   :commands (restclient-mode))
 
 (use-package lsp-mode
-  :hook ((js-mode python-mode java-mode) . lsp))
+  :commands (lsp)
+  :hook ((js-mode python-mode java-mode typescript-mode) . lsp)
+  :init
+  (setq lsp-prefer-flymake nil))
 
 (use-package company-lsp
   :commands (company-lsp))
 
-;; (use-package lsp-ui
-;;   :commands (lsp-ui)
-;;   :init
-;;   (setq lsp-ui-sideline-enable nil))
+(use-package lsp-ui
+  :commands (lsp-ui-mode)
+  :init
+  (setq lsp-ui-sideline-enable nil)
+  (setq lsp-ui-peek-enable nil)
+  (setq lsp-ui-doc-enable nil)
+  (setq lsp-ui-sideline-enable nil))
 
 (use-package lsp-java
   :after lsp
@@ -317,6 +323,7 @@
   (setq js2-strict-missing-semi-warning nil)
   (setq js2-mode-show-parse-errors nil)
   (setq js2-mode-show-strict-warnings nil)
+  (add-hook 'js2-mode-hook (lambda() (flycheck-add-next-checker 'lsp-ui 'javascript-eslint)))
   (add-hook 'js2-mode-hook 'p-flycheck-use-eslint-from-node-modules))
 
 (use-package skewer-mode

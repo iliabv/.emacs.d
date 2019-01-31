@@ -112,6 +112,12 @@
                           (bookmarks . 5)))
   (dashboard-setup-startup-hook))
 
+(use-package recentf
+  :config
+  (recentf-mode 1)
+  (setq recentf-max-menu-items 50)
+  (run-with-idle-timer (* 5 60) t 'recentf-save-list))
+
 (use-package evil
   :init
   (setq evil-want-C-u-scroll t

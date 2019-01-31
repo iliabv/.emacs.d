@@ -101,8 +101,8 @@
   (setq doom-modeline-buffer-file-name-style 'file-name)
   :config
   (doom-modeline-def-modeline 'custom
-    '(bar window-number matches " " buffer-info remote-host buffer-position " " selection-info)
-    '(lsp minor-modes major-mode process vcs flycheck))
+    '(bar evil-state matches buffer-info remote-host buffer-position selection-info)
+    '(misc-info lsp mu4e debug buffer-encoding major-mode process vcs checker))
   (doom-modeline-set-modeline 'custom t))
 
 (use-package dashboard

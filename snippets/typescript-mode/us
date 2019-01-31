@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: us
+# key: us
+# --
+'use strict';$0

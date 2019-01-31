@@ -1,0 +1,5 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: cl
+# key: cl
+# --
+console.log('$1', $1);$0

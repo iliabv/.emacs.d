@@ -277,7 +277,7 @@
 
 (use-package lsp-mode
   :commands (lsp)
-  :hook ((js-mode python-mode java-mode typescript-mode) . lsp)
+  :hook ((js-mode python-mode java-mode typescript-mode elixir-mode) . lsp)
   :init
   (setq lsp-prefer-flymake nil))
 
@@ -363,6 +363,17 @@
 
 (use-package go-mode
   :mode "\\.go\\'")
+
+(use-package elixir-mode
+  :mode "\\.ex\\'"
+  :init
+  (defface p-elixir-atom-face
+    '((((class color) (background light)) :foreground "RoyalBlue4")
+      (((class color) (background dark)) :foreground "light sky blue")
+      (t nil))
+    "For use with atoms & map keys."
+    :group 'font-lock-faces)
+  (setq elixir-atom-face 'p-elixir-atom-face))
 
 (use-package evil-cleverparens
   :hook (emacs-lisp-mode . evil-cleverparens-mode))

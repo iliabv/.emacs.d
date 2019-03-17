@@ -300,7 +300,7 @@
 (use-package company
   :init
   (setq company-minimum-prefix-length 3)
-  (setq company-idle-delay 0)
+  (setq company-idle-delay 0.3)
   (setq company-require-match 'never)
   (setq tab-always-indent 'complete)
   :config

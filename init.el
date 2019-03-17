@@ -86,12 +86,16 @@
 
 (use-package doom-themes
   :config
-  (load-theme 'doom-solarized-light t))
+  (load-theme 'doom-solarized-light t)
+  (doom-themes-visual-bell-config))
 
 (use-package solaire-mode
-  :hook ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-  :config
-  (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer))
+  :after (doom-themes)
+  :hook
+  ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+  (minibuffer-setup . solaire-mode-in-minibuffer)
+  :init
+  (solaire-global-mode +1))
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-init)

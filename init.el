@@ -22,7 +22,7 @@
 
 (if (eq system-type 'darwin)
   (set-face-attribute 'default nil :family "Iosevka" :height 185)
-  (set-face-attribute 'default nil :family "Iosevka Slab" :height 123))
+  (set-face-attribute 'default nil :family "Iosevka Slab" :height 150))
 
 (when window-system
   (scroll-bar-mode 0)

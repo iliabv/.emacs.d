@@ -22,7 +22,7 @@
 
 (if (eq system-type 'darwin)
   (set-face-attribute 'default nil :family "Iosevka" :height 185)
-  (set-face-attribute 'default nil :family "Iosevka Slab" :height 150))
+  (set-face-attribute 'default nil :family "Iosevka" :height 135))
 
 (when window-system
   (scroll-bar-mode 0)
@@ -105,7 +105,7 @@
   (setq doom-modeline-buffer-file-name-style 'file-name)
   :config
   (doom-modeline-def-modeline 'custom
-    '(bar evil-state matches buffer-info remote-host buffer-position selection-info)
+    '(bar modals matches buffer-info remote-host buffer-position selection-info)
     '(misc-info lsp mu4e debug buffer-encoding major-mode process vcs checker))
   (doom-modeline-set-modeline 'custom t))
 
@@ -264,6 +264,8 @@
    backup-by-copying t
    backup-directory-alist `(("." . ,(expand-file-name "backups/" user-emacs-directory)))
    delete-old-versions t
+   kept-new-versions 6
+   kept-old-versions 2
    version-control t))
 
 (use-package org)
@@ -291,6 +293,7 @@
 (use-package lsp-ui
   :commands (lsp-ui-mode)
   :init
+  (setq lsp-ui-flycheck-enable t)
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-ui-peek-enable nil)
   (setq lsp-ui-doc-enable nil)
@@ -363,7 +366,7 @@
   :mode "\\.ya?ml\\'")
 
 (use-package web-mode
-  :mode ("\\.erb\\'" "\\.mustache\\'" "\\.vue\\'" "\\.html?\\'" "\\.php\\'" "\\.inc\\'" "\\.tmpl\\'"))
+  :mode ("\\.erb\\'" "\\.mustache\\'" "\\.vue\\'" "\\.html?\\'" "\\.php\\'" "\\.inc\\'" "\\.tmpl\\'" "\\.html\\.eex\\'"))
 
 (use-package go-mode
   :mode "\\.go\\'")
@@ -414,6 +417,7 @@
    "cd"  '(xref-find-definitions :which-key "go to definition")
    "ci"  '(lsp-goto-implementation :which-key "go to implementation")
    "cr"  '(lsp-rename :which-key "rename")
+   "ch"  '(lsp-ui-doc-show :which-key "docs")
    "ce"  '(flycheck-list-errors :which-key "list errors")
 
    "ff"  '(helm-projectile-find-file :which-key "find files")

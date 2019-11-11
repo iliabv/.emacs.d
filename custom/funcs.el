@@ -29,7 +29,7 @@
 (defun p-term (name)
   "Open term buffer with given name"
   (interactive "sName: ")
-  (shell name)
+  (unless (get-buffer name) (vterm name))
   (display-buffer name))
 
 (defun p-term-in-project ()
@@ -37,7 +37,7 @@
   (interactive)
   (let* ((default-directory (or (projectile-project-root) default-directory))
          (buf-name (concat "*term:" (abbreviate-file-name default-directory) "*")))
-    (shell buf-name)
+    (unless (get-buffer buf-name) (vterm buf-name))
     (display-buffer buf-name)))
 
 (defun p-npm-build ()

@@ -20,6 +20,9 @@
 
 (load "~/.emacs.d/custom/funcs.el")
 
+(add-to-list 'load-path "~/projects/emacs-libvterm")
+(require 'vterm)
+
 (if (eq system-type 'darwin)
   (set-face-attribute 'default nil :family "Iosevka" :height 185)
   (set-face-attribute 'default nil :family "Iosevka" :height 135))
@@ -100,14 +103,19 @@
 (use-package doom-modeline
   :hook (after-init . doom-modeline-init)
   :init
-  (setq doom-modeline-height 35)
-  (setq doom-modeline-major-mode-icon nil)
+  (setq doom-modeline-icon nil)
+  (setq doom-modeline-height 30)
+  (set-face-attribute 'mode-line nil :height 135)
+  (set-face-attribute 'mode-line-inactive nil :height 135)
   (setq doom-modeline-buffer-file-name-style 'file-name)
+  (add-hook 'doom-modeline-mode-hook 'p-set-custom-doom-modeline)
   :config
-  (doom-modeline-def-modeline 'custom
+  (doom-modeline-def-modeline 'p-custom
     '(bar modals matches buffer-info remote-host buffer-position selection-info)
-    '(misc-info lsp mu4e debug buffer-encoding major-mode process vcs checker))
-  (doom-modeline-set-modeline 'custom t))
+    '(misc-info lsp debug major-mode process vcs checker)))
+
+(defun p-set-custom-doom-modeline ()
+  (doom-modeline-set-modeline 'p-custom 'default))
 
 (use-package dashboard
   :config
@@ -359,6 +367,9 @@
 (use-package csv-mode
   :mode "\\.csv\\'")
 
+(use-package lua-mode
+  :mode "\\.lua\\'")
+
 (use-package dockerfile-mode
   :mode "Dockerfile\\'")
 
@@ -472,6 +483,10 @@
   (general-define-key
     :states 'normal
     "<escape>" '(p-quit :which-key "escape"))
+
+  (general-define-key
+   :states 'insert
+   "C-v" '(yank :which-key "yank"))
 
   (general-define-key
     :states 'visual

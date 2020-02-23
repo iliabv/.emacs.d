@@ -20,9 +20,6 @@
 
 (load "~/.emacs.d/custom/funcs.el")
 
-(add-to-list 'load-path "~/projects/emacs-libvterm")
-(require 'vterm)
-
 (if (eq system-type 'darwin)
   (set-face-attribute 'default nil :family "Iosevka" :height 185)
   (set-face-attribute 'default nil :family "Iosevka" :height 135))
@@ -84,6 +81,9 @@
   (setq exec-path-from-shell-arguments '("-l" "-i"))
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
+
+(use-package vterm
+  :load-path "~/projects/emacs-libvterm")
 
 (use-package all-the-icons)
 

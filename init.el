@@ -31,6 +31,8 @@
   (menu-bar-mode 0))
 
 (setq-default
+ gc-cons-threshold 100000000
+ read-process-output-max (* 1024 1024)
  ad-redefinition-action 'accept
  auto-window-vscroll nil
  cursor-in-non-selected-windows t
@@ -314,8 +316,8 @@
 
 (use-package company
   :init
-  (setq company-minimum-prefix-length 3)
-  (setq company-idle-delay 0.3)
+  (setq company-minimum-prefix-length 1)
+  (setq company-idle-delay 0.1)
   (setq company-require-match 'never)
   (setq tab-always-indent 'complete)
   :config

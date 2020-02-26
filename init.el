@@ -541,7 +541,15 @@
    "C-j" '(company-search-repeat-forward :which-key "next")
    "C-k" '(company-search-repeat-backward :which-key "previous")
    "C-n" '(company-search-repeat-forward :which-key "next")
-   "C-p" '(company-search-repeat-backward :which-key "previous")))
+   "C-p" '(company-search-repeat-backward :which-key "previous"))
+
+  (general-define-key
+   :keymaps '(transient-map transient-edit-map)
+   "<escape>" 'transient-quit-one)
+
+  (general-define-key
+   :keymaps 'transient-sticky-map
+   "<escape>" 'transient-quit-seq))
 
 (setq custom-file (expand-file-name ".custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)

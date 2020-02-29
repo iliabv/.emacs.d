@@ -8,6 +8,7 @@ url/
 backups/
 workspace/
 anaconda-mode/
+transient/
 .cask/
 .cache/
 .vimish-fold/

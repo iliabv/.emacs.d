@@ -103,7 +103,7 @@
   (solaire-global-mode +1))
 
 (use-package doom-modeline
-  :hook (after-init . doom-modeline-init)
+  :hook (after-init . doom-modeline-mode)
   :init
   (setq doom-modeline-icon nil)
   (setq doom-modeline-height 30)
@@ -293,9 +293,11 @@
 
 (use-package lsp-mode
   :commands (lsp)
-  :hook ((js-mode python-mode java-mode typescript-mode elixir-mode) . lsp)
-  :init
-  (setq lsp-prefer-flymake nil))
+  :hook (((js-mode python-mode java-mode typescript-mode elixir-mode) . lsp)
+         (lsp-mode . lsp-enable-which-key-integration)))
+
+(use-package helm-lsp
+  :commands helm-lsp-workspace-symbol)
 
 (use-package company-lsp
   :commands (company-lsp))
@@ -303,7 +305,6 @@
 (use-package lsp-ui
   :commands (lsp-ui-mode)
   :init
-  (setq lsp-ui-flycheck-enable t)
   (setq lsp-ui-sideline-enable nil)
   (setq lsp-ui-peek-enable nil)
   (setq lsp-ui-doc-enable nil)
@@ -340,7 +341,7 @@
   (setq js2-strict-missing-semi-warning nil)
   (setq js2-mode-show-parse-errors nil)
   (setq js2-mode-show-strict-warnings nil)
-  (add-hook 'js2-mode-hook (lambda() (flycheck-add-next-checker 'lsp-ui 'javascript-eslint)))
+  (add-hook 'js2-mode-hook (lambda() (flycheck-add-next-checker 'lsp 'javascript-eslint)))
   (add-hook 'js2-mode-hook 'p-flycheck-use-eslint-from-node-modules))
 
 (use-package skewer-mode

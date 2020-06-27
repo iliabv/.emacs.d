@@ -85,7 +85,9 @@
     (exec-path-from-shell-initialize)))
 
 (use-package vterm
-  :load-path "~/projects/emacs-libvterm")
+  :load-path "~/projects/emacs-libvterm"
+  :config
+  (push (list "helm-find-files" 'helm-find-files-1) vterm-eval-cmds))
 
 (use-package all-the-icons)
 

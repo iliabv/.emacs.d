@@ -398,6 +398,10 @@
     :group 'font-lock-faces)
   (setq elixir-atom-face 'p-elixir-atom-face))
 
+(use-package flycheck-credo
+  :after elixir-mode
+  :config (flycheck-credo-setup))
+
 (use-package evil-cleverparens
   :hook (emacs-lisp-mode . evil-cleverparens-mode))
 

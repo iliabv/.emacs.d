@@ -233,6 +233,7 @@
 (defun p-quit ()
   (interactive)
   (evil-ex-nohighlight)
+  (lsp-ui-doc-hide)
   (cond ((eq last-command 'mode-exited) nil)
 	((region-active-p)
 	 (deactivate-mark))

@@ -107,16 +107,17 @@
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
   :init
-  (setq doom-modeline-icon nil)
-  (setq doom-modeline-height 30)
-  (set-face-attribute 'mode-line nil :height 135)
-  (set-face-attribute 'mode-line-inactive nil :height 135)
+  (unless window-system
+    (setq doom-modeline-icon nil)
+    (setq doom-modeline-height 30)
+    (set-face-attribute 'mode-line nil :height 135)
+    (set-face-attribute 'mode-line-inactive nil :height 135))
   (setq doom-modeline-buffer-file-name-style 'file-name)
   (add-hook 'doom-modeline-mode-hook 'p-set-custom-doom-modeline)
   :config
   (doom-modeline-def-modeline 'p-custom
     '(bar modals matches buffer-info remote-host buffer-position selection-info)
-    '(misc-info lsp debug major-mode process vcs checker)))
+    '(misc-info lsp debug major-mode process vcs checker " ")))
 
 (defun p-set-custom-doom-modeline ()
   (doom-modeline-set-modeline 'p-custom 'default))

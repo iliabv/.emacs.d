@@ -296,8 +296,10 @@
 
 (use-package lsp-mode
   :commands (lsp)
-  :hook (((js-mode python-mode java-mode typescript-mode elixir-mode) . lsp)
-         (lsp-mode . lsp-enable-which-key-integration)))
+  :hook (((js-mode python-mode java-mode typescript-mode elixir-mode web-mode) . lsp)
+         (lsp-mode . lsp-enable-which-key-integration))
+  :init
+  (setq lsp-enable-symbol-highlighting nil))
 
 (use-package helm-lsp
   :commands helm-lsp-workspace-symbol)
@@ -362,6 +364,28 @@
 (use-package typescript-mode
   :mode "\\.ts\\'")
 
+(use-package tide
+  :ensure t
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (before-save . tide-format-before-save))
+  :config
+  (flycheck-add-mode 'javascript-eslint 'web-mode)
+  (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
+  (add-hook 'web-mode-hook
+            (lambda ()
+              (when (string-equal "jsx" (file-name-extension buffer-file-name))
+                (setup-tide-mode)))))
+
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (flycheck-mode +1)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
+
 (use-package rust-mode
   :mode "\\.rs\\'")
 
@@ -383,7 +407,7 @@
   :mode "\\.ya?ml\\'")
 
 (use-package web-mode
-  :mode ("\\.erb\\'" "\\.mustache\\'" "\\.vue\\'" "\\.html?\\'" "\\.php\\'" "\\.inc\\'" "\\.tmpl\\'" "\\.html\\.eex\\'"))
+  :mode ("\\.erb\\'" "\\.mustache\\'" "\\.vue\\'" "\\.html?\\'" "\\.php\\'" "\\.inc\\'" "\\.tmpl\\'" "\\.html\\.eex\\'" "\\.jsx\\'" "\\.tsx\\'"))
 
 (use-package go-mode
   :mode "\\.go\\'")
@@ -503,6 +527,17 @@
     "<backspace>" '(delete-region :which-key "delete region (skip kill ring)")
     "v" '(er/expand-region :which-key "expand region")
     "V" '(er/contract-region :which-key "contract region"))
+
+  (general-define-key
+   :keymaps 'tide-mode-map
+   :states '(normal visual insert emacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   "cd"  '(tide-jump-to-definition :which-key "go to definition")
+   "cb"  '(tide-jump-back :which-key "go back")
+   "ci"  '(tide-jump-to-implementation :which-key "go to implementation")
+   "cr"  '(tide-rename-symbol :which-key "rename")
+   "ch"  '(tide-documentation-at-point :which-key "docs"))
 
   (general-define-key
    :keymaps 'helm-map

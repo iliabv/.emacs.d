@@ -18,6 +18,8 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(require 'tramp)
+
 (load "~/.emacs.d/custom/funcs.el")
 
 (if (eq system-type 'darwin)
@@ -63,6 +65,7 @@
  truncate-lines t
  x-stretch-cursor t)
 
+(global-hl-line-mode 1)
 (global-auto-revert-mode 1)
 (show-paren-mode 1)
 (delete-selection-mode 1)
@@ -91,24 +94,41 @@
 
 (use-package all-the-icons)
 
-(use-package doom-themes
+(use-package modus-operandi-theme
   :config
-  (load-theme 'doom-solarized-light t)
-  (doom-themes-visual-bell-config))
+  (setq modus-operandi-theme-slanted-constructs t
+        modus-operandi-theme-bold-constructs t
+        modus-operandi-theme-fringes nil
+        modus-operandi-theme-mode-line '3d ; {nil,'3d,'moody}
+        modus-operandi-theme-faint-syntax nil
+        modus-operandi-theme-intense-hl-line nil
+        modus-operandi-theme-intense-paren-match nil
+        modus-operandi-theme-links 'faint
+        modus-operandi-theme-no-mixed-fonts nil
+        modus-operandi-theme-prompts nil            ; {nil,'subtle,'intense}
+        modus-operandi-theme-completions 'moderate  ; {nil,'moderate,'opinionated}
+        modus-operandi-theme-diffs nil              ; {nil,'desaturated,'fg-only}
+        modus-operandi-theme-org-blocks 'greyscale) ; {nil,'greyscale,'rainbow})
+  (load-theme 'modus-operandi t))
 
-(use-package solaire-mode
-  :after (doom-themes)
-  :hook
-  ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-  (minibuffer-setup . solaire-mode-in-minibuffer)
-  :init
-  (solaire-global-mode +1))
+;; (use-package doom-themes
+;;   :config
+;;   (load-theme 'doom-solarized-light t)
+;;   (doom-themes-visual-bell-config))
+
+;; (use-package solaire-mode
+;;   :after (doom-themes)
+;;   :hook
+;;   ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+;;   (minibuffer-setup . solaire-mode-in-minibuffer)
+;;   :init
+;;   (solaire-global-mode +1))
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
   :init
+  (setq doom-modeline-icon nil)
   (unless window-system
-    (setq doom-modeline-icon nil)
     (setq doom-modeline-height 30)
     (set-face-attribute 'mode-line nil :height 135)
     (set-face-attribute 'mode-line-inactive nil :height 135))
@@ -117,7 +137,7 @@
   :config
   (doom-modeline-def-modeline 'p-custom
     '(bar modals matches buffer-info remote-host buffer-position selection-info)
-    '(misc-info lsp debug major-mode process vcs checker " ")))
+    '(misc-info lsp debug major-mode process vcs checker "  ")))
 
 (defun p-set-custom-doom-modeline ()
   (doom-modeline-set-modeline 'p-custom 'default))
@@ -460,6 +480,7 @@
    "bk"  '(kill-this-buffer :which-key "kill this buffer")
 
    "cd"  '(xref-find-definitions :which-key "go to definition")
+   "ca"  '(lsp-execute-code-action :which-key "execute code action")
    "ci"  '(lsp-goto-implementation :which-key "go to implementation")
    "cr"  '(lsp-rename :which-key "rename")
    "ch"  '(lsp-ui-doc-show :which-key "docs")

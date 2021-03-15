@@ -29,8 +29,9 @@
 (when window-system
   (scroll-bar-mode 0)
   (tool-bar-mode 0)
-  (tooltip-mode 0)
-  (menu-bar-mode 0))
+  (tooltip-mode 0))
+
+(menu-bar-mode 0)
 
 (setq-default
  gc-cons-threshold 100000000
@@ -94,35 +95,18 @@
 
 (use-package all-the-icons)
 
-(use-package modus-operandi-theme
+(use-package doom-themes
   :config
-  (setq modus-operandi-theme-slanted-constructs t
-        modus-operandi-theme-bold-constructs t
-        modus-operandi-theme-fringes nil
-        modus-operandi-theme-mode-line '3d ; {nil,'3d,'moody}
-        modus-operandi-theme-faint-syntax nil
-        modus-operandi-theme-intense-hl-line nil
-        modus-operandi-theme-intense-paren-match nil
-        modus-operandi-theme-links 'faint
-        modus-operandi-theme-no-mixed-fonts nil
-        modus-operandi-theme-prompts nil            ; {nil,'subtle,'intense}
-        modus-operandi-theme-completions 'moderate  ; {nil,'moderate,'opinionated}
-        modus-operandi-theme-diffs nil              ; {nil,'desaturated,'fg-only}
-        modus-operandi-theme-org-blocks 'greyscale) ; {nil,'greyscale,'rainbow})
-  (load-theme 'modus-operandi t))
+  (load-theme 'doom-one-light t)
+  (doom-themes-visual-bell-config))
 
-;; (use-package doom-themes
-;;   :config
-;;   (load-theme 'doom-solarized-light t)
-;;   (doom-themes-visual-bell-config))
-
-;; (use-package solaire-mode
-;;   :after (doom-themes)
-;;   :hook
-;;   ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-;;   (minibuffer-setup . solaire-mode-in-minibuffer)
-;;   :init
-;;   (solaire-global-mode +1))
+(use-package solaire-mode
+  :after (doom-themes)
+  :hook
+  ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+  (minibuffer-setup . solaire-mode-in-minibuffer)
+  :init
+  (solaire-global-mode +1))
 
 (use-package doom-modeline
   :hook (after-init . doom-modeline-mode)
@@ -319,7 +303,12 @@
   :hook (((js-mode python-mode java-mode typescript-mode elixir-mode web-mode) . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :init
-  (setq lsp-enable-symbol-highlighting nil))
+  (setq lsp-enable-symbol-highlighting nil)
+  (setq lsp-headerline-breadcrumb-enable nil)
+  :config
+  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\build$")
+  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\out$")
+  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.vscode$"))
 
 (use-package helm-lsp
   :commands helm-lsp-workspace-symbol)
@@ -387,8 +376,7 @@
 (use-package tide
   :ensure t
   :after (typescript-mode company flycheck)
-  :hook ((typescript-mode . tide-setup)
-         (before-save . tide-format-before-save))
+  :hook ((typescript-mode . tide-setup))
   :config
   (flycheck-add-mode 'javascript-eslint 'web-mode)
   (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)

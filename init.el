@@ -145,11 +145,16 @@
         evil-want-visual-char-semi-exclusive t
         evil-respect-visual-line-mode t
         evil-search-module 'evil-search
+        evil-want-keybinding nil
         evil-symbol-word-search t)
   :config
   (evil-mode 1))
 
-(use-package evil-magit)
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
 (use-package expand-region)
 
@@ -303,8 +308,9 @@
   :hook (((js-mode python-mode java-mode typescript-mode elixir-mode web-mode) . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :init
-  (setq lsp-enable-symbol-highlighting nil)
+  (setq lsp-enable-symbol-highlighting t)
   (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-modeline-diagnostics-scope :workspace)
   :config
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\build$")
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\out$")
@@ -319,7 +325,6 @@
 (use-package lsp-ui
   :commands (lsp-ui-mode)
   :init
-  (setq lsp-ui-sideline-enable nil)
   (setq lsp-ui-peek-enable nil)
   (setq lsp-ui-doc-enable nil)
   (setq lsp-ui-sideline-enable nil))
@@ -419,6 +424,18 @@
 
 (use-package go-mode
   :mode "\\.go\\'")
+
+(use-package zig-mode
+  :mode "\\.zig\\'"
+  :after lsp-mode
+  :init
+  (add-to-list 'lsp-language-id-configuration '(zig-mode . "zig"))
+  (lsp-register-client
+   (make-lsp-client
+    :new-connection (lsp-stdio-connection "~/projects/zls/zig-cache/bin/zls")
+    :major-modes '(zig-mode)
+    :server-id 'zls))
+  (add-hook 'zig-mode-hook #'lsp))
 
 (use-package elixir-mode
   :mode "\\.ex\\'"
@@ -602,6 +619,8 @@
   (general-define-key
    :keymaps 'transient-sticky-map
    "<escape>" 'transient-quit-seq))
+
+(define-key evil-normal-state-map [escape] 'p-quit)
 
 (setq custom-file (expand-file-name ".custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)

@@ -24,7 +24,7 @@
 
 (if (eq system-type 'darwin)
   (set-face-attribute 'default nil :family "Iosevka" :height 185)
-  (set-face-attribute 'default nil :family "Iosevka" :height 135))
+  (set-face-attribute 'default nil :family "Iosevka" :height 150))
 
 (when window-system
   (scroll-bar-mode 0)
@@ -68,6 +68,7 @@
 
 (global-hl-line-mode 1)
 (global-auto-revert-mode 1)
+(global-so-long-mode 1)
 (show-paren-mode 1)
 (delete-selection-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -104,7 +105,7 @@
   :after (doom-themes)
   :hook
   ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-  (minibuffer-setup . solaire-mode-in-minibuffer)
+  ;; (minibuffer-setup . solaire-mode-in-minibuffer)
   :init
   (solaire-global-mode +1))
 
@@ -308,9 +309,12 @@
   :hook (((js-mode python-mode java-mode typescript-mode elixir-mode web-mode) . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :init
+  (add-to-list 'exec-path "/home/ibabanov/projects/elixir-ls/release")
   (setq lsp-enable-symbol-highlighting t)
   (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-modeline-diagnostics-scope :workspace)
+  (setq lsp-diagnostics-attributes '((unnecessary :underline nil)))
+  (setq lsp-rust-analyzer-proc-macro-enable t)
   :config
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\build$")
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\out$")
@@ -318,9 +322,6 @@
 
 (use-package helm-lsp
   :commands helm-lsp-workspace-symbol)
-
-(use-package company-lsp
-  :commands (company-lsp))
 
 (use-package lsp-ui
   :commands (lsp-ui-mode)
@@ -399,8 +400,7 @@
   (tide-hl-identifier-mode +1)
   (company-mode +1))
 
-(use-package rust-mode
-  :mode "\\.rs\\'")
+(use-package rustic)
 
 (use-package pipenv
   :hook (python-mode . pipenv-mode)
@@ -432,7 +432,7 @@
   (add-to-list 'lsp-language-id-configuration '(zig-mode . "zig"))
   (lsp-register-client
    (make-lsp-client
-    :new-connection (lsp-stdio-connection "~/projects/zls/zig-cache/bin/zls")
+    :new-connection (lsp-stdio-connection "/usr/bin/zls")
     :major-modes '(zig-mode)
     :server-id 'zls))
   (add-hook 'zig-mode-hook #'lsp))
@@ -487,6 +487,7 @@
    "cd"  '(xref-find-definitions :which-key "go to definition")
    "ca"  '(lsp-execute-code-action :which-key "execute code action")
    "ci"  '(lsp-goto-implementation :which-key "go to implementation")
+   "cf"  '(lsp-find-references :which-key "go to implementation")
    "cr"  '(lsp-rename :which-key "rename")
    "ch"  '(lsp-ui-doc-show :which-key "docs")
    "ce"  '(flycheck-list-errors :which-key "list errors")
@@ -542,6 +543,7 @@
 
   (general-define-key
     :states 'normal
+    "C-u" '(evil-scroll-up :which-key "scroll up")
     "<escape>" '(p-quit :which-key "escape"))
 
   (general-define-key

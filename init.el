@@ -485,6 +485,7 @@
    "bk"  '(kill-this-buffer :which-key "kill this buffer")
 
    "cd"  '(xref-find-definitions :which-key "go to definition")
+   "cb"  '(evil-jump-backward :which-key "jump backward")
    "ca"  '(lsp-execute-code-action :which-key "execute code action")
    "ci"  '(lsp-goto-implementation :which-key "go to implementation")
    "cf"  '(lsp-find-references :which-key "go to implementation")

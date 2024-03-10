@@ -18,13 +18,14 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-(require 'tramp)
-
 (load "~/.emacs.d/custom/funcs.el")
 
 (if (eq system-type 'darwin)
   (set-face-attribute 'default nil :family "Iosevka" :height 185)
-  (set-face-attribute 'default nil :family "Iosevka" :height 150))
+  (set-face-attribute 'default nil :family "Iosevka" :height 185))
+
+(if (eq system-type 'darwin)
+    (setq image-types (cons 'svg image-types)))
 
 (when window-system
   (scroll-bar-mode 0)
@@ -63,6 +64,7 @@
  window-combination-resize t
  enable-dir-local-variables nil
  enable-local-variables :safe
+ enable-recursive-minibuffers t
  truncate-lines t
  x-stretch-cursor t)
 
@@ -72,7 +74,7 @@
 (show-paren-mode 1)
 (delete-selection-mode 1)
 (fset 'yes-or-no-p 'y-or-n-p)
-(mouse-avoidance-mode 'banish)
+(mouse-avoidance-mode 'none)
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
 (set-default-coding-systems 'utf-8)
@@ -83,6 +85,10 @@
 (add-hook 'prog-mode-hook 'p-enable-scroll-margin)
 (add-hook 'comint-mode-hook 'p-disable-scroll-margin)
 
+(use-package project
+  :config
+  (setq project-switch-commands 'project-find-file))
+
 (use-package exec-path-from-shell
   :config
   (setq exec-path-from-shell-arguments '("-l" "-i"))
@@ -92,7 +98,7 @@
 (use-package vterm
   :load-path "~/projects/emacs-libvterm"
   :config
-  (push (list "helm-find-files" 'helm-find-files-1) vterm-eval-cmds))
+  (setq vterm-max-scrollback 100000))
 
 (use-package all-the-icons)
 
@@ -167,42 +173,39 @@
 
 (use-package evil-anzu)
 
-(use-package helm
-  :init
-  (setq
-   helm-default-display-buffer-functions '(display-buffer-in-side-window)
-   helm-always-two-windows nil
-   helm-ff-fuzzy-matching t
-   helm-M-x-fuzzy-match t
-   helm-buffers-fuzzy-matching t
-   helm-recentf-fuzzy-match t
-   helm-completion-in-region-fuzzy-match t
-   helm-candidate-number-list 80
-   helm-split-window-in-side-p t
-   helm-move-to-line-cycle-in-source nil
-   helm-echo-input-in-header-line t
-   helm-autoresize-max-height 0
-   helm-autoresize-min-height 20
-   helm-buffer-max-length 50)
+(use-package consult
+  :ensure t
   :config
-  (helm-mode 1))
+  (setq consult-narrow-key "<"))
 
-(use-package helm-ag
-  :config
-  (setq helm-ag-base-command "rg --smart-case --no-heading --line-number --max-columns 150"))
+(use-package embark
+  :ensure t
+  :demand t)
 
-(use-package projectile
-  :init
-  (setq projectile-require-project-root nil)
-  (setq projectile-enable-caching t)
-  :config
-  (projectile-mode 1))
+(use-package embark-consult
+  :ensure t)
 
-(use-package helm-projectile
+(use-package wgrep
+  :ensure t)
+
+(use-package vertico
+  :ensure t
   :init
-  (setq helm-projectile-fuzzy-match nil)
+  (vertico-mode)
+  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+  (setq vertico-count 25))
+
+;; Marginalia: annotations for minibuffer
+(use-package marginalia
+  :ensure t
   :config
-  (helm-projectile-on))
+  (marginalia-mode))
+
+;; Orderless: powerful completion style
+(use-package orderless
+  :ensure t
+  :config
+  (setq completion-styles '(orderless)))
 
 (use-package flyspell
   :init
@@ -320,9 +323,6 @@
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\out$")
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.vscode$"))
 
-(use-package helm-lsp
-  :commands helm-lsp-workspace-symbol)
-
 (use-package lsp-ui
   :commands (lsp-ui-mode)
   :init
@@ -403,9 +403,7 @@
 (use-package rustic)
 
 (use-package pipenv
-  :hook (python-mode . pipenv-mode)
-  :init
-  (setq pipenv-projectile-after-switch-function #'pipenv-projectile-after-switch-extended))
+  :hook (python-mode . pipenv-mode))
 
 (use-package csv-mode
   :mode "\\.csv\\'")
@@ -465,6 +463,7 @@
 (use-package general
   :config
   (general-define-key
+   "C-<return>" '(embark-act :which-key "embark")
    "<escape>" '(p-quit :which-key "escape")
    "<f4>" '(p-term-in-project :which-key "terminal in project"))
 
@@ -474,15 +473,16 @@
    :prefix "SPC"
    :non-normal-prefix "M-SPC"
 
-   "SPC" '(helm-M-x :which-key "M-x")
+   "SPC" '(execute-extended-command :which-key "M-x")
    "TAB" '(switch-to-prev-buffer :which-key "previous buffer")
-   "RET" '(helm-bookmarks :which-key "bookmark")
-   "/"   '(helm-do-ag-project-root :which-key "search in project")
-   "a"   '(helm-mini :which-key "buffers list")
+   "RET" '(embark-act :which-key "bookmark")
+   "/"   '(consult-ripgrep :which-key "search in project")
+   "a"   '(consult-buffer :which-key "buffers list")
    ";"   '(evilnc-comment-or-uncomment-lines :which-key "comment")
-   "."   '(helm-find-files :which-key "find files")
+   "."   '(find-file :which-key "find files")
 
    "bk"  '(kill-this-buffer :which-key "kill this buffer")
+   "bb"  '(consult-bookmark :which-key "bookmark")
 
    "cd"  '(xref-find-definitions :which-key "go to definition")
    "cb"  '(evil-jump-backward :which-key "jump backward")
@@ -490,11 +490,12 @@
    "ci"  '(lsp-goto-implementation :which-key "go to implementation")
    "cf"  '(lsp-find-references :which-key "go to implementation")
    "cr"  '(lsp-rename :which-key "rename")
-   "ch"  '(lsp-ui-doc-show :which-key "docs")
+   "ch"  '(lsp-ui-doc-toggle :which-key "docs")
    "ce"  '(flycheck-list-errors :which-key "list errors")
+   "co"  '(consult-outline :which-key "outline")
 
-   "ff"  '(helm-projectile-find-file :which-key "find files")
-   "fp"  '(helm-projectile-find-file :which-key "find files in project")
+   "ff"  '(consult-find :which-key "find files")
+   "fp"  '(project-find-file :which-key "find files in project")
    "fy"  '(p-copy-file-name-and-line-number :which-key "copy file name and line number")
    "fs"  '(p-flyspell-save-word :which-key "flyspell save word")
 
@@ -505,9 +506,8 @@
 
    "ot"  '(p-term :which-key "open terminal")
 
-   "pf"  '(helm-projectile-find-file :which-key "find files in project")
-   "pp"  '(helm-projectile-switch-project :which-key "switch project")
-   "pb"  '(helm-projectile-switch-to-buffer :which-key "switch buffer")
+   "pf"  '(project-find-file :which-key "find files in project")
+   "pp"  '(project-switch-project :which-key "switch project")
 
    "tt"  '(neotree-toggle :which-key "toggle neotree")
    "tf"  '(neotree-find :which-key "show file in neotree")
@@ -516,10 +516,11 @@
    "qz"  '(delete-frame :which-key "delete frame")
    "qq"  '(kill-emacs :which-key "quit")
 
-   "hh"  '(helm-apropos :which-key "apropos")
+   "hh"  '(apropos :which-key "apropos")
    "jt"  '(p-term :which-key "open terminal")
-   "jk"  '(helm-show-kill-ring :which-key "show kill ring")
-   "jh"  '(helm-resume :which-key "helm-resume")
+   "jk"  '(consult-yank-from-kill-ring :which-key "yank from kill ring")
+   "jh"  '(vertico-repeat :which-key "resume last veritco session")
+   "jj"  '(vertico-repeat-select :which-key "choose veritco session")
    "js"  '(p-boo-sync :which-key "boo sync")
    "jr"  '(p-boo-sync-restart :which-key "boo sync and restart")
    "jb"  '(p-boo-set-role :which-key "boo set role")
@@ -567,16 +568,6 @@
    "ci"  '(tide-jump-to-implementation :which-key "go to implementation")
    "cr"  '(tide-rename-symbol :which-key "rename")
    "ch"  '(tide-documentation-at-point :which-key "docs"))
-
-  (general-define-key
-   :keymaps 'helm-map
-   "C-j" '(helm-next-line :which-key "next line")
-   "C-k" '(helm-previous-line :which-key "previous line")
-   "C-v" '(clipboard-yank :which-key "paste"))
-
-  (general-define-key
-   :keymaps 'helm-ag-map
-   "C-t" '(p-insert-g-arg :which-key "insert rg argument"))
 
   (general-define-key
    :keymaps 'neotree-mode-map

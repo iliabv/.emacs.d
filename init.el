@@ -21,8 +21,8 @@
 (load "~/.emacs.d/custom/funcs.el")
 
 (if (eq system-type 'darwin)
-  (set-face-attribute 'default nil :family "Iosevka" :height 185)
-  (set-face-attribute 'default nil :family "Iosevka" :height 185))
+  (set-face-attribute 'default nil :family "Iosevka" :height 180)
+  (set-face-attribute 'default nil :family "Iosevka" :height 180))
 
 (if (eq system-type 'darwin)
     (setq image-types (cons 'svg image-types)))
@@ -79,6 +79,8 @@
 (put 'upcase-region 'disabled nil)
 (set-default-coding-systems 'utf-8)
 
+(setq read-extended-command-predicate #'command-completion-default-include-p)
+
 (setq ring-bell-function 'p-flash-modeline)
 
 (add-hook 'prog-mode-hook 'p-show-trailing-whitespace)
@@ -96,7 +98,6 @@
     (exec-path-from-shell-initialize)))
 
 (use-package vterm
-  :load-path "~/projects/emacs-libvterm"
   :config
   (setq vterm-max-scrollback 100000))
 
@@ -128,7 +129,7 @@
   :config
   (doom-modeline-def-modeline 'p-custom
     '(bar modals matches buffer-info remote-host buffer-position selection-info)
-    '(misc-info lsp debug major-mode process vcs checker "  ")))
+    '(misc-info lsp debug major-mode process vcs "  ")))
 
 (defun p-set-custom-doom-modeline ()
   (doom-modeline-set-modeline 'p-custom 'default))
@@ -173,6 +174,15 @@
 
 (use-package evil-anzu)
 
+(use-package gptel
+  :config
+  (setq
+   gptel-model "gemma2:latest"
+   gptel-backend (gptel-make-ollama "Ollama"
+                                    :host "localhost:11434"
+                                    :stream t
+                                    :models '("gemma2:latest"))))
+
 (use-package consult
   :ensure t
   :config
@@ -195,13 +205,11 @@
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
   (setq vertico-count 25))
 
-;; Marginalia: annotations for minibuffer
 (use-package marginalia
   :ensure t
   :config
   (marginalia-mode))
 
-;; Orderless: powerful completion style
 (use-package orderless
   :ensure t
   :config
@@ -309,7 +317,7 @@
 
 (use-package lsp-mode
   :commands (lsp)
-  :hook (((js-mode python-mode java-mode typescript-mode elixir-mode web-mode) . lsp)
+  :hook (((glsl-mode lua-mode js-mode python-mode java-mode typescript-mode elixir-mode web-mode) . lsp)
          (lsp-mode . lsp-enable-which-key-integration))
   :init
   (add-to-list 'exec-path "/home/ibabanov/projects/elixir-ls/release")
@@ -318,13 +326,13 @@
   (setq lsp-modeline-diagnostics-scope :workspace)
   (setq lsp-diagnostics-attributes '((unnecessary :underline nil)))
   (setq lsp-rust-analyzer-proc-macro-enable t)
+  (setq lsp-glsl-executable '("glsl_analyzer"))
   :config
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\build$")
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\out$")
   (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.vscode$"))
 
 (use-package lsp-ui
-  :commands (lsp-ui-mode)
   :init
   (setq lsp-ui-peek-enable nil)
   (setq lsp-ui-doc-enable nil)
@@ -335,23 +343,34 @@
   :init
   (setq lsp-java-save-action-organize-imports nil))
 
-(use-package company
-  :init
-  (setq company-minimum-prefix-length 1)
-  (setq company-idle-delay 0.1)
-  (setq company-require-match 'never)
-  (setq tab-always-indent 'complete)
-  :config
-  (global-company-mode 1)
-  (define-key company-active-map (kbd "TAB") 'company-complete-common-or-cycle)
-  (define-key company-active-map (kbd "<tab>") 'company-complete-common-or-cycle)
-  (define-key company-active-map (kbd "S-TAB") 'company-select-previous)
-  (define-key company-active-map (kbd "<backtab>") 'company-select-previous))
+(use-package glsl-mode)
 
-(use-package company-quickhelp
-  :config
-  (setq company-quickhelp-delay nil)
-  (company-quickhelp-mode))
+
+(use-package corfu
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
+  ;; (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+  ;; Enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+  ;; Recommended: Enable Corfu globally.  This is recommended since Dabbrev can
+  ;; be used globally (M-/).  See also the customization variable
+  ;; `global-corfu-modes' to exclude certain modes.
+  :init
+  (setq tab-always-indent 'complete)
+  (setq corfu-popupinfo-delay 0.5)
+  (corfu-echo-mode)
+  (corfu-history-mode)
+  (corfu-popupinfo-mode)
+  (global-corfu-mode))
 
 (use-package js2-mode
   :mode "\\.js\\'"
@@ -381,7 +400,7 @@
 
 (use-package tide
   :ensure t
-  :after (typescript-mode company flycheck)
+  :after (typescript-mode flycheck)
   :hook ((typescript-mode . tide-setup))
   :config
   (flycheck-add-mode 'javascript-eslint 'web-mode)
@@ -397,8 +416,7 @@
   (flycheck-mode +1)
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (eldoc-mode +1)
-  (tide-hl-identifier-mode +1)
-  (company-mode +1))
+  (tide-hl-identifier-mode +1))
 
 (use-package rustic)
 
@@ -464,8 +482,7 @@
   :config
   (general-define-key
    "C-<return>" '(embark-act :which-key "embark")
-   "<escape>" '(p-quit :which-key "escape")
-   "<f4>" '(p-term-in-project :which-key "terminal in project"))
+   "<escape>" '(p-quit :which-key "escape"))
 
   (general-define-key
    :states '(normal visual insert emacs)
@@ -484,6 +501,7 @@
    "bk"  '(kill-this-buffer :which-key "kill this buffer")
    "bb"  '(consult-bookmark :which-key "bookmark")
 
+   "cc"  '(xref-find-definitions :which-key "go to definition")
    "cd"  '(xref-find-definitions :which-key "go to definition")
    "cb"  '(evil-jump-backward :which-key "jump backward")
    "ca"  '(lsp-execute-code-action :which-key "execute code action")
@@ -500,6 +518,7 @@
    "fs"  '(p-flyspell-save-word :which-key "flyspell save word")
 
    "gg"  '(magit :which-key "magit")
+   "gs"  '(magit :which-key "magit")
    "gb"  '(magit-blame :which-key "git blame")
    "gl"  '(magit-log-buffer-file :which-key "log current file")
    "gm"  '(p-shell-show-mine-commits :which-key "show mine commits")
@@ -521,11 +540,13 @@
    "jk"  '(consult-yank-from-kill-ring :which-key "yank from kill ring")
    "jh"  '(vertico-repeat :which-key "resume last veritco session")
    "jj"  '(vertico-repeat-select :which-key "choose veritco session")
-   "js"  '(p-boo-sync :which-key "boo sync")
-   "jr"  '(p-boo-sync-restart :which-key "boo sync and restart")
-   "jb"  '(p-boo-set-role :which-key "boo set role")
+   "jn"  '(p-npm-build :which-key "run npm build")
+   "ji"  '(gptel-send :which-key "GPTel send")
+   "jm"  '(gptel-menu :which-key "GPTel menu")
+   "ja"  '(gptel-abort :which-key "GPTel abort")
+
+   "jr"  '(p-love-run :which-key "run love in the current project")
    "jl"  '(p-bpr-open-last-buffer :which-key "open last BPR buffer")
-   "ji"  '(comint-clear-buffer :which-key "clear comint buffer")
 
    "wl"  '(windmove-right :which-key "move right")
    "wh"  '(windmove-left :which-key "move left")
@@ -594,17 +615,6 @@
     :keymaps 'comint-mode-map
     "<up>" '(comint-previous-input :which-key "history prev")
     "<down>" '(comint-next-input :which-key "history next"))
-
-  (general-define-key
-   :keymaps 'company-active-map
-   "C-i" '(company-quickhelp-manual-begin :which-key "show docs"))
-
-  (general-define-key
-   :keymaps 'company-search-map
-   "C-j" '(company-search-repeat-forward :which-key "next")
-   "C-k" '(company-search-repeat-backward :which-key "previous")
-   "C-n" '(company-search-repeat-forward :which-key "next")
-   "C-p" '(company-search-repeat-backward :which-key "previous"))
 
   (general-define-key
    :keymaps '(transient-map transient-edit-map)

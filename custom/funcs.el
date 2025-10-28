@@ -41,10 +41,19 @@
     (display-buffer buf-name)))
 
 (defun p-npm-build ()
-  "Runs 'npm run build' command"
+  "Runs `npm run build` command"
   (interactive)
   (let ((bpr-scroll-direction -1))
     (bpr-spawn "npm run build")))
+
+(defun p-love-run ()
+  "Runs `love .`"
+  (interactive)
+  (let* ((pr (project-current))
+         (bpr-process-directory (project-root pr))
+         (bpr-open-after-error nil)
+         (bpr-scroll-direction -1))
+    (bpr-spawn "love .")))
 
 (defvar p-boo-role "app"
   "Default role for p-boo* commands")

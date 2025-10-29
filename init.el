@@ -353,7 +353,7 @@
   ;; (corfu-separator ?\s)          ;; Orderless field separator
   ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
   ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
   ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
   ;; (corfu-scroll-margin 5)        ;; Use scroll margin
@@ -482,6 +482,8 @@
   :config
   (general-define-key
    "C-<return>" '(embark-act :which-key "embark")
+   "C-s-<return>" '(embark-export :which-key "embark export")
+   "<f4>" '(p-term-in-project :which-key "terminal in project")
    "<escape>" '(p-quit :which-key "escape"))
 
   (general-define-key
@@ -527,6 +529,7 @@
 
    "pf"  '(project-find-file :which-key "find files in project")
    "pp"  '(project-switch-project :which-key "switch project")
+   "pt"  '(p-term-in-project :which-key "project terminal")
 
    "tt"  '(neotree-toggle :which-key "toggle neotree")
    "tf"  '(neotree-find :which-key "show file in neotree")

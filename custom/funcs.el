@@ -35,7 +35,7 @@
 (defun p-term-in-project ()
   "Open term buffer in current project"
   (interactive)
-  (let* ((default-directory (or (projectile-project-root) default-directory))
+  (let* ((default-directory (or (project-root (project-current)) default-directory))
          (buf-name (concat "*term:" (abbreviate-file-name default-directory) "*")))
     (unless (get-buffer buf-name) (vterm buf-name))
     (display-buffer buf-name)))

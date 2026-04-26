@@ -26,20 +26,6 @@
   (interactive)
   (delete-process "Tern"))
 
-(defun p-term (name)
-  "Open term buffer with given name"
-  (interactive "sName: ")
-  (unless (get-buffer name) (vterm name))
-  (display-buffer name))
-
-(defun p-term-in-project ()
-  "Open term buffer in current project"
-  (interactive)
-  (let* ((default-directory (or (project-root (project-current)) default-directory))
-         (buf-name (concat "*term:" (abbreviate-file-name default-directory) "*")))
-    (unless (get-buffer buf-name) (vterm buf-name))
-    (display-buffer buf-name)))
-
 (defun p-npm-build ()
   "Runs `npm run build` command"
   (interactive)
@@ -242,8 +228,6 @@
 (defun p-quit ()
   (interactive)
   (evil-ex-nohighlight)
-  (if (boundp 'lsp-ui-doc-hide)
-      (lsp-ui-doc-hide))
   (cond ((eq last-command 'mode-exited) nil)
 	((region-active-p)
 	 (deactivate-mark))
@@ -292,13 +276,6 @@
   "Shrink current window horizontally."
   (interactive)
   (shrink-window-horizontally 50))
-
-(defun p-flycheck-use-eslint-from-node-modules ()
-  "Ask flycheck to use eslint form local node_modules."
-  (let* ((root (locate-dominating-file (or (buffer-file-name) default-directory) "node_modules"))
-          (eslint (and root (expand-file-name "node_modules/eslint/bin/eslint.js" root))))
-    (when (and eslint (file-executable-p eslint))
-      (setq-local flycheck-javascript-eslint-executable eslint))))
 
 (provide 'funcs)
 ;;; funcs.el ends here

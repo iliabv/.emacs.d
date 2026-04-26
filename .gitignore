@@ -12,6 +12,7 @@ transient/
 .cask/
 .cache/
 .vimish-fold/
+projects
 
 tramp
 recentf

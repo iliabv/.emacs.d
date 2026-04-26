@@ -7,6 +7,7 @@
 (setq package-enable-at-startup nil)
 (setq package-archives '(("org"   . "http://orgmode.org/elpa/")
                          ("gnu"   . "http://elpa.gnu.org/packages/")
+                         ("nongnu" . "https://elpa.nongnu.org/nongnu/")
                          ("melpa" . "https://melpa.org/packages/")))
 
 (unless package--initialized (package-initialize))
@@ -21,8 +22,8 @@
 (load "~/.emacs.d/custom/funcs.el")
 
 (if (eq system-type 'darwin)
-  (set-face-attribute 'default nil :family "Iosevka" :height 180)
-  (set-face-attribute 'default nil :family "Iosevka" :height 180))
+  (set-face-attribute 'default nil :family "Iosevka" :height 160)
+  (set-face-attribute 'default nil :family "Iosevka" :height 160))
 
 (if (eq system-type 'darwin)
     (setq image-types (cons 'svg image-types)))
@@ -83,23 +84,26 @@
 
 (setq ring-bell-function 'p-flash-modeline)
 
+(add-hook 'xref-after-jump-hook #'recenter)
 (add-hook 'prog-mode-hook 'p-show-trailing-whitespace)
 (add-hook 'prog-mode-hook 'p-enable-scroll-margin)
 (add-hook 'comint-mode-hook 'p-disable-scroll-margin)
 
+(setq vc-handled-backends '(Git))
+
 (use-package project
   :config
-  (setq project-switch-commands 'project-find-file))
+  (setq project-switch-commands 'project-find-file)
+  (setq project-vc-extra-root-markers
+        '("Cargo.toml" "go.mod" "package.json" "pyproject.toml"
+          "BUILD" "BUILD.bazel" "MODULE.bazel"))
+  (setq project-vc-include-untracked nil))
 
 (use-package exec-path-from-shell
   :config
   (setq exec-path-from-shell-arguments '("-l" "-i"))
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
-
-(use-package vterm
-  :config
-  (setq vterm-max-scrollback 100000))
 
 (use-package all-the-icons)
 
@@ -129,7 +133,7 @@
   :config
   (doom-modeline-def-modeline 'p-custom
     '(bar modals matches buffer-info remote-host buffer-position selection-info)
-    '(misc-info lsp debug major-mode process vcs "  ")))
+    '(misc-info debug major-mode process vcs "  ")))
 
 (defun p-set-custom-doom-modeline ()
   (doom-modeline-set-modeline 'p-custom 'default))
@@ -156,7 +160,8 @@
         evil-want-keybinding nil
         evil-symbol-word-search t)
   :config
-  (evil-mode 1))
+  (evil-mode 1)
+  (advice-add 'evil-ex-search :after (lambda (&rest _) (recenter))))
 
 (use-package evil-collection
   :after evil
@@ -173,15 +178,6 @@
   (global-set-key [remap query-replace] 'anzu-query-replace))
 
 (use-package evil-anzu)
-
-(use-package gptel
-  :config
-  (setq
-   gptel-model "gemma2:latest"
-   gptel-backend (gptel-make-ollama "Ollama"
-                                    :host "localhost:11434"
-                                    :stream t
-                                    :models '("gemma2:latest"))))
 
 (use-package consult
   :ensure t
@@ -220,11 +216,6 @@
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'text-mode-hook 'turn-on-flyspell))
 
-(use-package flycheck
-  :config
-  (setq-default flycheck-disabled-checkers '(emacs-lisp-checkdoc))
-  (global-flycheck-mode))
-
 (use-package neotree
   :init
   (setq neo-hidden-regexp-list '("~$" "^#.*#$"))
@@ -245,7 +236,9 @@
 
 (use-package magit
   :init
-  (setq magit-refresh-status-buffer nil))
+  (setq magit-refresh-status-buffer nil)
+  :config
+  (setq magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
 (use-package diff-hl
   :hook (prog-mode . turn-on-diff-hl-mode)
@@ -315,33 +308,20 @@
 (use-package restclient
   :commands (restclient-mode))
 
-(use-package lsp-mode
-  :commands (lsp)
-  :hook (((glsl-mode lua-mode js-mode python-mode java-mode typescript-mode elixir-mode web-mode) . lsp)
-         (lsp-mode . lsp-enable-which-key-integration))
+(use-package eglot
+  :ensure nil
+  :hook ((glsl-mode lua-mode js-mode python-mode java-mode
+          typescript-mode elixir-mode web-mode go-mode zig-mode
+          rustic-mode)
+         . eglot-ensure)
   :init
   (add-to-list 'exec-path "/home/ibabanov/projects/elixir-ls/release")
-  (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-headerline-breadcrumb-enable nil)
-  (setq lsp-modeline-diagnostics-scope :workspace)
-  (setq lsp-diagnostics-attributes '((unnecessary :underline nil)))
-  (setq lsp-rust-analyzer-proc-macro-enable t)
-  (setq lsp-glsl-executable '("glsl_analyzer"))
   :config
-  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\build$")
-  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\out$")
-  (add-to-list 'lsp-file-watch-ignored "[/\\\\]\\.vscode$"))
-
-(use-package lsp-ui
-  :init
-  (setq lsp-ui-peek-enable nil)
-  (setq lsp-ui-doc-enable nil)
-  (setq lsp-ui-sideline-enable nil))
-
-(use-package lsp-java
-  :after lsp
-  :init
-  (setq lsp-java-save-action-organize-imports nil))
+  (add-to-list 'eglot-server-programs '(glsl-mode . ("glsl_analyzer")))
+  (add-to-list 'eglot-server-programs '(zig-mode . ("/usr/bin/zls")))
+  (setq-default eglot-workspace-configuration
+                '(:rust-analyzer (:procMacro (:enable t))))
+  (setq eglot-autoshutdown t))
 
 (use-package glsl-mode)
 
@@ -379,9 +359,7 @@
   (setq js2-strict-trailing-comma-warning nil)
   (setq js2-strict-missing-semi-warning nil)
   (setq js2-mode-show-parse-errors nil)
-  (setq js2-mode-show-strict-warnings nil)
-  (add-hook 'js2-mode-hook (lambda() (flycheck-add-next-checker 'lsp 'javascript-eslint)))
-  (add-hook 'js2-mode-hook 'p-flycheck-use-eslint-from-node-modules))
+  (setq js2-mode-show-strict-warnings nil))
 
 (use-package skewer-mode
   :commands (run-skewer))
@@ -398,27 +376,9 @@
 (use-package typescript-mode
   :mode "\\.ts\\'")
 
-(use-package tide
-  :ensure t
-  :after (typescript-mode flycheck)
-  :hook ((typescript-mode . tide-setup))
-  :config
-  (flycheck-add-mode 'javascript-eslint 'web-mode)
-  (flycheck-add-next-checker 'javascript-eslint 'jsx-tide 'append)
-  (add-hook 'web-mode-hook
-            (lambda ()
-              (when (string-equal "jsx" (file-name-extension buffer-file-name))
-                (setup-tide-mode)))))
-
-(defun setup-tide-mode ()
-  (interactive)
-  (tide-setup)
-  (flycheck-mode +1)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (eldoc-mode +1)
-  (tide-hl-identifier-mode +1))
-
-(use-package rustic)
+(use-package rustic
+  :init
+  (setq rustic-lsp-client 'eglot))
 
 (use-package pipenv
   :hook (python-mode . pipenv-mode))
@@ -439,19 +399,11 @@
   :mode ("\\.erb\\'" "\\.mustache\\'" "\\.vue\\'" "\\.html?\\'" "\\.php\\'" "\\.inc\\'" "\\.tmpl\\'" "\\.html\\.eex\\'" "\\.jsx\\'" "\\.tsx\\'"))
 
 (use-package go-mode
-  :mode "\\.go\\'")
+  :mode "\\.go\\'"
+  :hook (before-save-hook . gofmt-before-save))
 
 (use-package zig-mode
-  :mode "\\.zig\\'"
-  :after lsp-mode
-  :init
-  (add-to-list 'lsp-language-id-configuration '(zig-mode . "zig"))
-  (lsp-register-client
-   (make-lsp-client
-    :new-connection (lsp-stdio-connection "/usr/bin/zls")
-    :major-modes '(zig-mode)
-    :server-id 'zls))
-  (add-hook 'zig-mode-hook #'lsp))
+  :mode "\\.zig\\'")
 
 (use-package elixir-mode
   :mode "\\.ex\\'"
@@ -463,10 +415,6 @@
     "For use with atoms & map keys."
     :group 'font-lock-faces)
   (setq elixir-atom-face 'p-elixir-atom-face))
-
-(use-package flycheck-credo
-  :after elixir-mode
-  :config (flycheck-credo-setup))
 
 (use-package evil-cleverparens
   :hook (emacs-lisp-mode . evil-cleverparens-mode))
@@ -483,8 +431,8 @@
   (general-define-key
    "C-<return>" '(embark-act :which-key "embark")
    "C-s-<return>" '(embark-export :which-key "embark export")
-   "<f4>" '(p-term-in-project :which-key "terminal in project")
-   "<escape>" '(p-quit :which-key "escape"))
+   "<escape>" '(p-quit :which-key "escape")
+   "s-m" '(consult-buffer :which-key "buffers list"))
 
   (general-define-key
    :states '(normal visual insert emacs)
@@ -497,21 +445,22 @@
    "RET" '(embark-act :which-key "bookmark")
    "/"   '(consult-ripgrep :which-key "search in project")
    "a"   '(consult-buffer :which-key "buffers list")
+   "m"   '(consult-buffer :which-key "buffers list")
    ";"   '(evilnc-comment-or-uncomment-lines :which-key "comment")
    "."   '(find-file :which-key "find files")
 
-   "bk"  '(kill-this-buffer :which-key "kill this buffer")
+   "bk"  '(kill-current-buffer :which-key "kill this buffer")
    "bb"  '(consult-bookmark :which-key "bookmark")
 
    "cc"  '(xref-find-definitions :which-key "go to definition")
    "cd"  '(xref-find-definitions :which-key "go to definition")
    "cb"  '(evil-jump-backward :which-key "jump backward")
-   "ca"  '(lsp-execute-code-action :which-key "execute code action")
-   "ci"  '(lsp-goto-implementation :which-key "go to implementation")
-   "cf"  '(lsp-find-references :which-key "go to implementation")
-   "cr"  '(lsp-rename :which-key "rename")
-   "ch"  '(lsp-ui-doc-toggle :which-key "docs")
-   "ce"  '(flycheck-list-errors :which-key "list errors")
+   "ca"  '(eglot-code-actions :which-key "execute code action")
+   "ci"  '(eglot-find-implementation :which-key "go to implementation")
+   "cf"  '(xref-find-references :which-key "find references")
+   "cr"  '(eglot-rename :which-key "rename")
+   "ch"  '(eldoc-doc-buffer :which-key "docs")
+   "ce"  '(flymake-show-buffer-diagnostics :which-key "list errors")
    "co"  '(consult-outline :which-key "outline")
 
    "ff"  '(consult-find :which-key "find files")
@@ -525,11 +474,8 @@
    "gl"  '(magit-log-buffer-file :which-key "log current file")
    "gm"  '(p-shell-show-mine-commits :which-key "show mine commits")
 
-   "ot"  '(p-term :which-key "open terminal")
-
    "pf"  '(project-find-file :which-key "find files in project")
    "pp"  '(project-switch-project :which-key "switch project")
-   "pt"  '(p-term-in-project :which-key "project terminal")
 
    "tt"  '(neotree-toggle :which-key "toggle neotree")
    "tf"  '(neotree-find :which-key "show file in neotree")
@@ -539,7 +485,6 @@
    "qq"  '(kill-emacs :which-key "quit")
 
    "hh"  '(apropos :which-key "apropos")
-   "jt"  '(p-term :which-key "open terminal")
    "jk"  '(consult-yank-from-kill-ring :which-key "yank from kill ring")
    "jh"  '(vertico-repeat :which-key "resume last veritco session")
    "jj"  '(vertico-repeat-select :which-key "choose veritco session")
@@ -549,7 +494,7 @@
    "ja"  '(gptel-abort :which-key "GPTel abort")
 
    "jr"  '(p-love-run :which-key "run love in the current project")
-   "jl"  '(p-bpr-open-last-buffer :which-key "open last BPR buffer")
+   "jl"  '(agent-shell-toggle :which-key "toggle agent shell")
 
    "wl"  '(windmove-right :which-key "move right")
    "wh"  '(windmove-left :which-key "move left")
@@ -581,17 +526,6 @@
     "<backspace>" '(delete-region :which-key "delete region (skip kill ring)")
     "v" '(er/expand-region :which-key "expand region")
     "V" '(er/contract-region :which-key "contract region"))
-
-  (general-define-key
-   :keymaps 'tide-mode-map
-   :states '(normal visual insert emacs)
-   :prefix "SPC"
-   :non-normal-prefix "M-SPC"
-   "cd"  '(tide-jump-to-definition :which-key "go to definition")
-   "cb"  '(tide-jump-back :which-key "go back")
-   "ci"  '(tide-jump-to-implementation :which-key "go to implementation")
-   "cr"  '(tide-rename-symbol :which-key "rename")
-   "ch"  '(tide-documentation-at-point :which-key "docs"))
 
   (general-define-key
    :keymaps 'neotree-mode-map

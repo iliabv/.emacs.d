@@ -352,6 +352,10 @@
   (corfu-popupinfo-mode)
   (global-corfu-mode))
 
+(use-package kdl-mode
+  :ensure t
+  :mode "\\.kdl\\'")
+
 (use-package js2-mode
   :mode "\\.js\\'"
   :config

@@ -22,8 +22,8 @@
 (load "~/.emacs.d/custom/funcs.el")
 
 (if (eq system-type 'darwin)
-  (set-face-attribute 'default nil :family "Iosevka" :height 160)
-  (set-face-attribute 'default nil :family "Iosevka" :height 160))
+  (set-face-attribute 'default nil :family "IosevkaTerm Nerd Font Mono" :height 160)
+  (set-face-attribute 'default nil :family "IosevkaTerm Nerd Font Mono" :height 160))
 
 ;; (if (eq system-type 'darwin)
 ;;   (setq image-types (cons 'svg image-types)))
@@ -216,12 +216,27 @@
   (add-hook 'prog-mode-hook 'flyspell-prog-mode)
   (add-hook 'text-mode-hook 'turn-on-flyspell))
 
-(use-package neotree
+(use-package treemacs
+  :defer t
+  :commands (treemacs treemacs-find-file)
   :init
-  (setq neo-hidden-regexp-list '("~$" "^#.*#$"))
-  (setq neo-window-fixed-size nil)
-  (setq neo-window-width 40)
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow)))
+  (setq treemacs-width                       40
+        treemacs-position                    'left
+        treemacs-show-hidden-files           t
+        treemacs-follow-after-init           t
+        treemacs-recenter-after-file-follow  'on-distance
+        treemacs-eldoc-display               'simple)
+  :config
+  (treemacs-follow-mode t)
+  (treemacs-project-follow-mode t)
+  (treemacs-git-mode 'deferred))
+
+(use-package treemacs-evil  :after (treemacs evil))
+(use-package treemacs-magit :after (treemacs magit))
+
+(use-package treemacs-nerd-icons
+  :after treemacs
+  :config (treemacs-load-theme "nerd-icons"))
 
 (use-package evil-nerd-commenter
   :commands (evilnc-comment-or-uncomment-lines))
@@ -252,8 +267,7 @@
 (use-package shackle
   :config
   (setq shackle-rules
-        '((neotree-mode :align left)
-          ("\\*helm.*?\\*" :regexp t :align t :size 0.5)
+        '(("\\*helm.*?\\*" :regexp t :align t :size 0.5)
           ("\\*term:.*?\\*" :regexp t :align t :select t :size 0.6)
           ("\\*.*\\*" :regexp t :align t :select t :size 0.5)))
   (shackle-mode))
@@ -505,7 +519,7 @@
    "s-m" '(consult-buffer :which-key "buffers list"))
 
   (general-define-key
-   :states '(normal visual insert emacs)
+   :states '(normal visual insert emacs treemacs)
    :keymaps '(global override)
    :prefix "SPC"
    :non-normal-prefix "M-SPC"
@@ -547,8 +561,8 @@
    "pf"  '(project-find-file :which-key "find files in project")
    "pp"  '(project-switch-project :which-key "switch project")
 
-   "tt"  '(neotree-toggle :which-key "toggle neotree")
-   "tf"  '(neotree-find :which-key "show file in neotree")
+   "tt"  '(treemacs :which-key "toggle treemacs")
+   "tf"  '(treemacs-find-file :which-key "show file in treemacs")
    "tl"  '(toggle-truncate-lines :which-key "toggle line wrapping")
 
    "qz"  '(delete-frame :which-key "delete frame")
@@ -596,27 +610,6 @@
     "<backspace>" '(delete-region :which-key "delete region (skip kill ring)")
     "v" '(er/expand-region :which-key "expand region")
     "V" '(er/contract-region :which-key "contract region"))
-
-  (general-define-key
-   :keymaps 'neotree-mode-map
-   :states 'normal
-   "TAB" 'neotree-quick-look
-   "RET" 'neotree-enter
-   "c"   'neotree-create-node
-   "r"   'neotree-rename-node
-   "d"   'neotree-delete-node
-   "j"   'neotree-next-line
-   "k"   'neotree-previous-line
-   "n"   'neotree-next-line
-   "p"   'neotree-previous-line
-   "J"   'neotree-select-next-sibling-node
-   "K"   'neotree-select-previous-sibling-node
-   "H"   'neotree-select-up-node
-   "L"   'neotree-select-down-node
-   "v"   'neotree-enter-vertical-split
-   "s"   'neotree-enter-horizontal-split
-   "q"   'neotree-hide
-   "R"   'neotree-refresh)
 
   (general-define-key
     :keymaps 'comint-mode-map

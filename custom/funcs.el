@@ -282,6 +282,7 @@
 If treemacs is visible hide it; otherwise show it scoped to the
 current project (replacing any previously-displayed project)."
   (interactive)
+  (require 'treemacs)
   (if (eq (treemacs-current-visibility) 'visible)
       (delete-window (treemacs-get-local-window))
     (treemacs-add-and-display-current-project-exclusively)))
@@ -289,6 +290,7 @@ current project (replacing any previously-displayed project)."
 (defun p-treemacs-find-current-file ()
   "Find current file in treemacs, switching project first if needed."
   (interactive)
+  (require 'treemacs)
   (let ((path (buffer-file-name (current-buffer))))
     (treemacs-add-and-display-current-project-exclusively)
     (when path

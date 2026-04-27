@@ -93,7 +93,7 @@
 
 (use-package project
   :config
-  (setq project-switch-commands 'consult-fd)
+  (setq project-switch-commands 'affe-find)
   (setq project-vc-extra-root-markers
         '("Cargo.toml" "go.mod" "package.json" "pyproject.toml"
           "BUILD" "BUILD.bazel" "MODULE.bazel"))
@@ -183,6 +183,10 @@
   :ensure t
   :config
   (setq consult-narrow-key "<"))
+
+(use-package affe
+  :config
+  (setq affe-count 1000))
 
 (use-package embark
   :ensure t
@@ -548,8 +552,8 @@
    "ce"  '(flymake-show-buffer-diagnostics :which-key "list errors")
    "co"  '(consult-outline :which-key "outline")
 
-   "ff"  '(consult-find :which-key "find files")
-   "fp"  '(consult-fd :which-key "find files in project")
+   "ff"  '(find-file :which-key "find files")
+   "fp"  '(affe-find :which-key "find files in project")
    "fy"  '(p-copy-file-name-and-line-number :which-key "copy file name and line number")
    "fs"  '(p-flyspell-save-word :which-key "flyspell save word")
 
@@ -559,7 +563,7 @@
    "gl"  '(magit-log-buffer-file :which-key "log current file")
    "gm"  '(p-shell-show-mine-commits :which-key "show mine commits")
 
-   "pf"  '(consult-fd :which-key "find files in project")
+   "pf"  '(affe-find :which-key "find files in project")
    "pp"  '(project-switch-project :which-key "switch project")
 
    "tt"  '(treemacs :which-key "toggle treemacs")

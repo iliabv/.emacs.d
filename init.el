@@ -93,7 +93,7 @@
 
 (use-package project
   :config
-  (setq project-switch-commands 'project-find-file)
+  (setq project-switch-commands 'consult-fd)
   (setq project-vc-extra-root-markers
         '("Cargo.toml" "go.mod" "package.json" "pyproject.toml"
           "BUILD" "BUILD.bazel" "MODULE.bazel"))
@@ -516,7 +516,8 @@
    "C-<return>" '(embark-act :which-key "embark")
    "C-s-<return>" '(embark-export :which-key "embark export")
    "<escape>" '(p-quit :which-key "escape")
-   "s-m" '(consult-buffer :which-key "buffers list"))
+   "s-m" '(consult-buffer :which-key "buffers list")
+   "M-u" '(universal-argument :which-key "universal argument"))
 
   (general-define-key
    :states '(normal visual insert emacs treemacs)
@@ -548,7 +549,7 @@
    "co"  '(consult-outline :which-key "outline")
 
    "ff"  '(consult-find :which-key "find files")
-   "fp"  '(project-find-file :which-key "find files in project")
+   "fp"  '(consult-fd :which-key "find files in project")
    "fy"  '(p-copy-file-name-and-line-number :which-key "copy file name and line number")
    "fs"  '(p-flyspell-save-word :which-key "flyspell save word")
 
@@ -558,7 +559,7 @@
    "gl"  '(magit-log-buffer-file :which-key "log current file")
    "gm"  '(p-shell-show-mine-commits :which-key "show mine commits")
 
-   "pf"  '(project-find-file :which-key "find files in project")
+   "pf"  '(consult-fd :which-key "find files in project")
    "pp"  '(project-switch-project :which-key "switch project")
 
    "tt"  '(treemacs :which-key "toggle treemacs")

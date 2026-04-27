@@ -25,8 +25,8 @@
   (set-face-attribute 'default nil :family "Iosevka" :height 160)
   (set-face-attribute 'default nil :family "Iosevka" :height 160))
 
-(if (eq system-type 'darwin)
-    (setq image-types (cons 'svg image-types)))
+;; (if (eq system-type 'darwin)
+;;   (setq image-types (cons 'svg image-types)))
 
 (when window-system
   (scroll-bar-mode 0)
@@ -310,9 +310,14 @@
 
 (use-package eglot
   :ensure nil
-  :hook ((glsl-mode lua-mode js-mode python-mode java-mode
-          typescript-mode elixir-mode web-mode go-mode zig-mode
-          rustic-mode)
+  :hook ((glsl-mode lua-mode js-mode js-ts-mode
+          python-mode python-ts-mode
+          java-mode java-ts-mode
+          typescript-mode typescript-ts-mode tsx-ts-mode
+          elixir-mode web-mode
+          go-mode go-ts-mode
+          zig-mode rustic-mode rust-ts-mode
+          scala-ts-mode)
          . eglot-ensure)
   :init
   (add-to-list 'exec-path "/home/ibabanov/projects/elixir-ls/release")
@@ -400,7 +405,7 @@
   :mode "\\.ya?ml\\'")
 
 (use-package web-mode
-  :mode ("\\.erb\\'" "\\.mustache\\'" "\\.vue\\'" "\\.html?\\'" "\\.php\\'" "\\.inc\\'" "\\.tmpl\\'" "\\.html\\.eex\\'" "\\.jsx\\'" "\\.tsx\\'"))
+  :mode ("\\.erb\\'" "\\.mustache\\'" "\\.vue\\'" "\\.html?\\'" "\\.php\\'" "\\.inc\\'" "\\.tmpl\\'" "\\.html\\.eex\\'" "\\.jsx\\'"))
 
 (use-package go-mode
   :mode "\\.go\\'"
@@ -419,6 +424,67 @@
     "For use with atoms & map keys."
     :group 'font-lock-faces)
   (setq elixir-atom-face 'p-elixir-atom-face))
+
+;; --- Tree-sitter grammars and *-ts-mode routing ---
+;; Place this AFTER all conflicting language use-packages so its
+;; auto-mode-alist prepends win the lookup.
+(use-package treesit
+  :ensure nil
+  :when (treesit-available-p)
+  :init
+  (setq treesit-language-source-alist
+        '((tsx        . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+          (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
+          (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+          (json       . ("https://github.com/tree-sitter/tree-sitter-json"))
+          (css        . ("https://github.com/tree-sitter/tree-sitter-css"))
+          (html       . ("https://github.com/tree-sitter/tree-sitter-html"))
+          (yaml       . ("https://github.com/ikatyang/tree-sitter-yaml"))
+          (bash       . ("https://github.com/tree-sitter/tree-sitter-bash"))
+          (go         . ("https://github.com/tree-sitter/tree-sitter-go"))
+          (gomod      . ("https://github.com/camdencheek/tree-sitter-go-mod"))
+          (rust       . ("https://github.com/tree-sitter/tree-sitter-rust"))
+          (python     . ("https://github.com/tree-sitter/tree-sitter-python"))
+          (java       . ("https://github.com/tree-sitter/tree-sitter-java"))
+          (scala      . ("https://github.com/tree-sitter/tree-sitter-scala"))
+          (toml       . ("https://github.com/tree-sitter/tree-sitter-toml"))
+          (starlark   . ("https://github.com/amaanq/tree-sitter-starlark"))))
+  :config
+  ;; One-shot install per machine. Skips already-installed grammars.
+  (dolist (lang (mapcar #'car treesit-language-source-alist))
+    (unless (treesit-language-available-p lang)
+      (condition-case err
+          (treesit-install-language-grammar lang)
+        (error (message "treesit: failed to install %s: %S" lang err)))))
+  ;; Redirect explicit invocations of legacy modes to their ts-mode forms.
+  (dolist (mapping '((typescript-mode . typescript-ts-mode)
+                     (js-mode         . js-ts-mode)
+                     (json-mode       . json-ts-mode)
+                     (css-mode        . css-ts-mode)
+                     (yaml-mode       . yaml-ts-mode)
+                     (python-mode     . python-ts-mode)
+                     (go-mode         . go-ts-mode)
+                     (java-mode       . java-ts-mode)
+                     (sh-mode         . bash-ts-mode)))
+    (add-to-list 'major-mode-remap-alist mapping))
+  ;; Route file extensions to ts-mode forms (prepend → wins over earlier
+  ;; entries from web-mode/typescript-mode/json-mode/yaml-mode/etc.).
+  (dolist (entry '(("\\.tsx\\'"            . tsx-ts-mode)
+                   ("\\.ts\\'"             . typescript-ts-mode)
+                   ("\\.rs\\'"             . rust-ts-mode)
+                   ("\\.go\\'"             . go-ts-mode)
+                   ("/go\\.mod\\'"         . go-mod-ts-mode)
+                   ("\\.java\\'"           . java-ts-mode)
+                   ("\\.py[iw]?\\'"        . python-ts-mode)
+                   ("\\.toml\\'"           . toml-ts-mode)
+                   ("/Cargo\\.lock\\'"     . toml-ts-mode)))
+    (add-to-list 'auto-mode-alist entry)))
+
+;; Scala and Bazel don't ship with built-in *-ts-mode; use external packages.
+(use-package scala-ts-mode
+  :mode ("\\.scala\\'" "\\.sbt\\'"))
+
+(use-package bazel)
 
 (use-package evil-cleverparens
   :hook (emacs-lisp-mode . evil-cleverparens-mode))

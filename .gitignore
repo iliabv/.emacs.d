@@ -24,3 +24,6 @@ projectile.cache
 .multiple-cursors.el
 .projectile-cache
 .lsp-session-*
+.dap-breakpoints
+bookmarks
+tree-sitter/

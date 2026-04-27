@@ -228,6 +228,7 @@
         treemacs-position                    'left
         treemacs-show-hidden-files           t
         treemacs-follow-after-init           t
+        treemacs-project-follow-cleanup      t
         treemacs-recenter-after-file-follow  'on-distance
         treemacs-eldoc-display               'simple)
   :config
@@ -566,8 +567,8 @@
    "pf"  '(affe-find :which-key "find files in project")
    "pp"  '(project-switch-project :which-key "switch project")
 
-   "tt"  '(treemacs :which-key "toggle treemacs")
-   "tf"  '(treemacs-find-file :which-key "show file in treemacs")
+   "tt"  '(p-treemacs-toggle-current-project :which-key "toggle treemacs")
+   "tf"  '(p-treemacs-find-current-file :which-key "show file in treemacs")
    "tl"  '(toggle-truncate-lines :which-key "toggle line wrapping")
 
    "qz"  '(delete-frame :which-key "delete frame")

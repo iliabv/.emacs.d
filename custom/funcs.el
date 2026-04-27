@@ -277,5 +277,23 @@
   (interactive)
   (shrink-window-horizontally 50))
 
+(defun p-treemacs-toggle-current-project ()
+  "Toggle treemacs, but always rooted at the current buffer's project.
+If treemacs is visible hide it; otherwise show it scoped to the
+current project (replacing any previously-displayed project)."
+  (interactive)
+  (if (eq (treemacs-current-visibility) 'visible)
+      (delete-window (treemacs-get-local-window))
+    (treemacs-add-and-display-current-project-exclusively)))
+
+(defun p-treemacs-find-current-file ()
+  "Find current file in treemacs, switching project first if needed."
+  (interactive)
+  (let ((path (buffer-file-name (current-buffer))))
+    (treemacs-add-and-display-current-project-exclusively)
+    (when path
+      (-when-let (project (treemacs--find-project-for-path path))
+        (treemacs-goto-file-node path project)))))
+
 (provide 'funcs)
 ;;; funcs.el ends here

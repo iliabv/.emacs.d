@@ -225,7 +225,7 @@
   :commands (treemacs treemacs-find-file)
   :init
   (setq treemacs-width                       40
-        treemacs-position                    'left
+        treemacs-position                    'right
         treemacs-show-hidden-files           t
         treemacs-follow-after-init           t
         treemacs-project-follow-cleanup      t
@@ -314,7 +314,14 @@
    kept-old-versions 2
    version-control t))
 
-(use-package org)
+(use-package org
+  :hook (org-mode . visual-line-mode))
+
+(use-package markdown-mode
+  :mode (("\\.md\\'" . gfm-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :hook ((markdown-mode . visual-line-mode)
+         (gfm-mode . visual-line-mode)))
 
 (use-package evil-org
   :after org

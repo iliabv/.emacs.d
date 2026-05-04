@@ -287,6 +287,97 @@ current project (replacing any previously-displayed project)."
       (delete-window (treemacs-get-local-window))
     (treemacs-add-and-display-current-project-exclusively)))
 
+(defcustom p-mermaid-ascii-program
+  (or (executable-find "mermaid-ascii")
+      (expand-file-name "go/bin/mermaid-ascii" (getenv "HOME")))
+  "Path to the mermaid-ascii binary."
+  :type 'string
+  :group 'p)
+
+(defun p-mermaid--block-bounds ()
+  "Return (BEG . END) of the mermaid fenced code block at point, or nil.
+Recognises markdown ```mermaid blocks and org #+begin_src mermaid blocks."
+  (save-excursion
+    (let ((start-re "^[ \t]*\\(?:```[ \t]*mermaid\\|#\\+begin_src[ \t]+mermaid\\)\\b")
+          (end-re   "^[ \t]*\\(?:```\\|#\\+end_src\\)[ \t]*$")
+          (orig (point))
+          beg end)
+      (beginning-of-line)
+      (when (or (looking-at start-re)
+                (re-search-backward start-re nil t))
+        (forward-line 1)
+        (setq beg (point))
+        (when (re-search-forward end-re nil t)
+          (setq end (match-beginning 0))
+          (when (and (<= beg orig) (<= orig end))
+            (cons beg end)))))))
+
+(defun p-mermaid-render-block ()
+  "Render the mermaid fenced block at point as ASCII in a side buffer."
+  (interactive)
+  (unless (file-executable-p p-mermaid-ascii-program)
+    (user-error "mermaid-ascii not found at %s" p-mermaid-ascii-program))
+  (let* ((bounds (or (p-mermaid--block-bounds)
+                     (user-error "Not inside a mermaid code block")))
+         (src (buffer-substring-no-properties (car bounds) (cdr bounds)))
+         (buf (get-buffer-create "*mermaid-ascii*")))
+    (with-current-buffer buf
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (let ((exit (with-temp-buffer
+                      (insert src)
+                      (call-process-region
+                       (point-min) (point-max)
+                       p-mermaid-ascii-program
+                       nil (list buf t) nil
+                       "-f" "-"))))
+          (unless (zerop exit)
+            (goto-char (point-min))
+            (insert (format "mermaid-ascii exited with %s:\n\n" exit)))))
+      (goto-char (point-min))
+      (special-mode))
+    (display-buffer buf)))
+
+(defcustom p-mermaid-live-url "https://mermaid.live/edit"
+  "Base URL for the Mermaid Live Editor."
+  :type 'string
+  :group 'p)
+
+(defun p-mermaid--live-link (src)
+  "Build a Mermaid Live Editor URL embedding SRC in the fragment."
+  (require 'json)
+  (let* ((payload (encode-coding-string
+                   (json-encode
+                    `(("code" . ,src)
+                      ("mermaid" . "{\"theme\":\"default\"}")
+                      ("autoSync" . t)
+                      ("updateDiagram" . t)))
+                   'utf-8))
+         (b64 (if (fboundp 'base64url-encode-string)
+                  (base64url-encode-string payload t)
+                (replace-regexp-in-string
+                 "=+\\'" ""
+                 (replace-regexp-in-string
+                  "/" "_"
+                  (replace-regexp-in-string
+                   "+" "-"
+                   (base64-encode-string payload t)))))))
+    (format "%s#base64:%s" p-mermaid-live-url b64)))
+
+(defun p-mermaid-open-in-live-editor ()
+  "Open the mermaid block at point in the Mermaid Live Editor.
+The diagram source is embedded in the URL fragment, so the link is
+self-contained — no server round-trip needed.  The URL is also copied
+to the kill ring."
+  (interactive)
+  (let* ((bounds (or (p-mermaid--block-bounds)
+                     (user-error "Not inside a mermaid code block")))
+         (src (buffer-substring-no-properties (car bounds) (cdr bounds)))
+         (url (p-mermaid--live-link src)))
+    (kill-new url)
+    (message "Mermaid Live URL copied (%d chars)" (length url))
+    (browse-url url)))
+
 (defun p-treemacs-find-current-file ()
   "Find current file in treemacs, switching project first if needed."
   (interactive)

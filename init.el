@@ -586,12 +586,14 @@
    "jh"  '(vertico-repeat :which-key "resume last veritco session")
    "jj"  '(vertico-repeat-select :which-key "choose veritco session")
    "jn"  '(p-npm-build :which-key "run npm build")
-   "ji"  '(gptel-send :which-key "GPTel send")
-   "jm"  '(gptel-menu :which-key "GPTel menu")
-   "ja"  '(gptel-abort :which-key "GPTel abort")
+   ;; "ji"  '(gptel-send :which-key "GPTel send")
+   ;; "jm"  '(gptel-menu :which-key "GPTel menu")
+   ;; "ja"  '(gptel-abort :which-key "GPTel abort")
 
    "jr"  '(p-love-run :which-key "run love in the current project")
    "jl"  '(agent-shell-toggle :which-key "toggle agent shell")
+   "jd"  '(p-mermaid-render-block :which-key "render mermaid block as ASCII")
+   "jm"  '(p-mermaid-open-in-live-editor :which-key "open mermaid block in mermaid.live")
 
    "wl"  '(windmove-right :which-key "move right")
    "wh"  '(windmove-left :which-key "move left")
